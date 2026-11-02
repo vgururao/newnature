@@ -1,0 +1,23 @@
+.env
+.env.*
+.DS_Store
+
+# Inbox binaries/media stay in Dropbox only; text and markdown are tracked.
+inbox/**/*.pdf
+inbox/**/*.doc
+inbox/**/*.docx
+inbox/**/*.pptx
+inbox/**/*.key
+inbox/**/*.epub
+inbox/**/*.png
+inbox/**/*.jpg
+inbox/**/*.jpeg
+inbox/**/*.gif
+inbox/**/*.heic
+inbox/**/*.webp
+inbox/**/*.mp3
+inbox/**/*.m4a
+inbox/**/*.wav
+inbox/**/*.mp4
+inbox/**/*.mov
+inbox/**/*.zip
