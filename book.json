@@ -1,13 +1,14 @@
 {
   "$format": "blykker book config v0 — see Code/blygger-protocol/blykker/PLAN.md",
   "blyg": "https://newnature.venkateshrao.com",
-  "password": { "file": ".env", "var": "BLYG_NEWNATURE_OWNER_PASSWORD" },
-
+  "password": {
+    "file": ".env",
+    "var": "BLYG_NEWNATURE_OWNER_PASSWORD"
+  },
   "title": "New Nature",
-  "subtitle": "",
+  "subtitle": "How artificial intelligence and computational hardness are rewilding the planet",
   "author": "Venkatesh Rao",
   "notes": "chapter",
-
   "settings": {
     "siteTitle": "New Nature",
     "authorName": "Venkatesh Rao",
@@ -17,54 +18,132 @@
     "customThemeName": "Book",
     "customTheme": {
       "dark": false,
-      "page": "#ece6da", "paper": "#fbf8f1",
-      "ink": "#262321", "inkSoft": "#6e665c", "rule": "#e2dacb", "pencil": "#8c3b2e",
-      "genBg": "#f3ecdf", "genRule": "#dccbb0"
+      "page": "#ece6da",
+      "paper": "#fbf8f1",
+      "ink": "#262321",
+      "inkSoft": "#6e665c",
+      "rule": "#e2dacb",
+      "pencil": "#8c3b2e",
+      "genBg": "#f3ecdf",
+      "genRule": "#dccbb0"
     },
-    "linksPosition": "left",
+    "linksPosition": "bottom",
     "linksBlyggerOrg": false,
-    "linksBlyggerCom": false
+    "linksBlyggerCom": true,
+    "authorBio": "Writer and consultant; Director of Research, Protocol Institute."
   },
-
+  "menu": {
+    "top": [
+      {
+        "label": "Contents",
+        "section": "toc"
+      },
+      {
+        "label": "Start reading",
+        "section": "@first"
+      },
+      {
+        "label": "About",
+        "section": "about"
+      }
+    ],
+    "bottom": [
+      {
+        "label": "Made with Blykker, a new blygger protocol client based on Blygger Studio, designed for writing and publishing books",
+        "url": "https://github.com/blygger/blykker"
+      }
+    ]
+  },
   "sections": {
     "cover": {
-      "role": "cover", "title": "Cover", "id": null,
-      "seed": "# New Nature\n\n*Venkatesh Rao*\n\n*A book in progress. Cover image to come.*\n\n[[{toc} | Begin reading →]]"
+      "role": "cover",
+      "title": "Cover",
+      "id": "2sj0bb5vpy606f545190mhjfrt",
+      "seed": "![New Nature: How artificial intelligence and computational hardness are rewilding the planet, by Venkatesh Rao]({image})\n\n*How artificial intelligence and computational hardness are rewilding the planet*\n\n[[{toc} | Contents]] · [[{ch1} | Start reading →]]",
+      "image": {
+        "file": "images/cover/cover-web.jpg",
+        "alt": "New Nature: How artificial intelligence and computational hardness are rewilding the planet, by Venkatesh Rao"
+      }
+    },
+    "title": {
+      "role": "title",
+      "title": "Title page",
+      "id": "0qz1zryj43v0ey4wt31f10xzzk",
+      "seed": "# New Nature\n\n*How artificial intelligence and computational hardness are rewilding the planet*\n\n**Venkatesh Rao**\n\nOnline edition, in progress · 2026"
     },
     "toc": {
-      "role": "toc", "title": "Contents", "id": null,
+      "role": "toc",
+      "title": "Contents",
+      "id": "0ajsfe9jk0rrctr9x76j0xf6fz",
       "seed": "# Contents\n\n- [[{ch1} | Chapter 1: Introduction]]\n- [[{references} | References]]\n- [[{index} | Index]]"
     },
+    "preface": {
+      "role": "preface",
+      "title": "Preface",
+      "id": "3sfmhy8dmsxqrk3wtg3we4a9dk",
+      "seed": "# Preface\n\n*To come.*"
+    },
     "ch1": {
-      "role": "chapter", "title": "Chapter 1: Introduction", "id": null,
+      "role": "chapter",
+      "title": "Chapter 1: Introduction",
+      "id": "78yzqsnjsjw5qcaza3xe4sk3qv",
       "seed": "# Chapter 1: Introduction\n\n*Draft in progress.*"
     },
     "references": {
-      "role": "references", "title": "References", "id": null,
+      "role": "references",
+      "title": "References",
+      "id": "6mt28vrv8adg37kz1sjmh11qjp",
       "seed": "# References"
     },
     "index": {
-      "role": "index", "title": "Index", "id": null,
+      "role": "index",
+      "title": "Index",
+      "id": "55vash0p5z5ktpcdw8ypwax36g",
       "seed": "# Index"
+    },
+    "about": {
+      "role": "about",
+      "title": "About the author",
+      "id": "4p7ppd8mtqmv5dj4q100yszjqz",
+      "seed": "# About the author\n\nVenkatesh Rao is a writer and consultant based in Seattle. He writes the Contraptions newsletter, and is a co-founder and the Director of Research of the Protocol Institute, which grew out of the Summer of Protocols program he directed from 2023 to 2026. He is a core developer of the Blygger protocol. From 2007 to 2024 he wrote the blog Ribbonfarm. His books include *Tempo* (2011) and *vgr: The Twitter Years (2007–22)*.\n\n[venkateshrao.com](https://venkateshrao.com) · [Contraptions](https://contraptions.venkateshrao.com) · [Protocol Institute](https://protocol-institute.org)"
     }
   },
-
   "references": [
-    { "key": "rao-2026-new-nature", "id": null,
-      "entry": "Rao, Venkatesh. “New Nature.” *Protocolized*, June 17, 2026. <https://protocolized.io/features/new-nature>" },
-    { "key": "rao-2026-inventing", "id": null,
-      "entry": "Rao, Venkatesh. “Inventing New Nature.” *Protocolized*, May 12, 2026. <https://protocolized.io/p/inventing-new-nature>" },
-    { "key": "rao-2026-fabric", "id": null,
-      "entry": "Rao, Venkatesh. “The Fabric and the Brain.” *Protocolized*, March 31, 2026. <https://protocolized.io/p/the-fabric-and-the-brain>" },
-    { "key": "rao-2026-theorizing", "id": null,
-      "entry": "Rao, Venkatesh. “Theorizing Protocolization I: New Nature.” *Protocolized*, January 8, 2026. <https://protocolized.io/p/theorizing-protocolization-i-new>" },
-    { "key": "rao-2025-evil-twin", "id": null,
-      "entry": "Rao, Venkatesh. “Constructing the Evil Twin of AI.” *Protocolized*, October 15, 2025. <https://protocolized.io/p/constructing-the-evil-twin-of-ai>" },
-    { "key": "wulf-2015", "id": null,
-      "entry": "Wulf, Andrea. *The Invention of Nature: Alexander von Humboldt’s New World*. New York: Knopf, 2015." }
+    {
+      "key": "rao-2026-new-nature",
+      "id": "1ytmw03xgpkmhmrm7hcv0ea1gd",
+      "entry": "Rao, Venkatesh. “New Nature.” *Protocolized*, June 17, 2026. <https://protocolized.io/features/new-nature>"
+    },
+    {
+      "key": "rao-2026-inventing",
+      "id": "3e072d02trjq54q8dgvgpe35t1",
+      "entry": "Rao, Venkatesh. “Inventing New Nature.” *Protocolized*, May 12, 2026. <https://protocolized.io/p/inventing-new-nature>"
+    },
+    {
+      "key": "rao-2026-fabric",
+      "id": "4y267j9ppw6p0a4wxaaexwbt87",
+      "entry": "Rao, Venkatesh. “The Fabric and the Brain.” *Protocolized*, March 31, 2026. <https://protocolized.io/p/the-fabric-and-the-brain>"
+    },
+    {
+      "key": "rao-2026-theorizing",
+      "id": "1v4dkcthmcxhs8bc5kqj71e5fj",
+      "entry": "Rao, Venkatesh. “Theorizing Protocolization I: New Nature.” *Protocolized*, January 8, 2026. <https://protocolized.io/p/theorizing-protocolization-i-new>"
+    },
+    {
+      "key": "rao-2025-evil-twin",
+      "id": "775rfh21byc6pb7a3vt2tt04ym",
+      "entry": "Rao, Venkatesh. “Constructing the Evil Twin of AI.” *Protocolized*, October 15, 2025. <https://protocolized.io/p/constructing-the-evil-twin-of-ai>"
+    },
+    {
+      "key": "wulf-2015",
+      "id": "0mp6x28xk4ehfds4mnx9q79zzm",
+      "entry": "Wulf, Andrea. *The Invention of Nature: Alexander von Humboldt’s New World*. New York: Knopf, 2015."
+    }
   ],
-
   "index": {
-    "terms": ["hardness", "immutability"]
+    "terms": [
+      "hardness",
+      "immutability"
+    ]
   }
 }

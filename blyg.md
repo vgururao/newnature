@@ -36,6 +36,8 @@ When blykker forks, its own private config takes over the `newnature` env and th
 
 - 2026-11-02 — D1 and R2 created, migrations 0001–0038 applied, Worker deployed, live checks pass
   (`blyg.json` 200, generator `blygger-studio/0.50.0`; `feed.xml` 200; `items/index.json` 200; `studio/syntax` 302).
-- **Pending:** owner password and cookie secret. Until they are set the studio login refuses everyone
-  (the Worker fails closed). Run `scripts/set-blyg-secrets.sh` once.
-- **Then, in the studio:** Settings → title ("New Nature"?), author name, bio. Default title is "blyg".
+- 2026-11-02 — Owner secrets set (`scripts/set-blyg-secrets.sh`). Settings (title, author, theme, menus,
+  front page) are applied by `blykker.py sync` from `book.json`. Change them there, not in the studio,
+  or the next sync reverts them.
+- **Pending:** `AI_PROVIDER_KEY`. Once the key is in `Code/.env.keys`:
+  `npx wrangler secret put AI_PROVIDER_KEY --config wrangler.private.jsonc --env newnature` (studio repo).

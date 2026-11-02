@@ -15,6 +15,8 @@ Repo: `vgururao/newnature` (private, branch `main`).
 | `inbox/` | Raw working materials Venkat drops in — notes, drafts, transcripts, PDFs, images. Unprocessed. See `inbox/README.md`. |
 | `sources.md` | Source material by URL — links to read, cite or mine, with a line on why each matters. |
 | `blyg.md` | The blyg: where it is deployed, how to deploy/upgrade it, and its state. |
+| `AUTHORING.md` | **How to write the book in the studio**: section item ids, chapters, notes, references, index terms, images, running sync. |
+| `images/` | Cover source + composed web cover (`scripts/make_cover.py`); `images/print/` for print-resolution files (Dropbox only). |
 | `book.json` | The book's blykker config: blyg, settings (theme, font), sections and their item ids, reference entries, index terms. Ids are written back by `blykker.py seed`. |
 | `blykker-notes.md` | Requirements for the book-specific client, gathered while writing (see below). |
 | `status.md` | Session log and open items (the Dashboard reads it). |
@@ -34,8 +36,8 @@ Chapters will get their own folder once writing starts; decide the shape then, n
   `Code/protocol-institute/humboldt/` (research agent investigating "new nature"). **Never enter
   `protocol-institute/` without asking** (Claude memory).
 - **The blyg is the publishing surface.** Writing gets published there through the studio at
-  `https://newnature.venkateshrao.com/studio`. Publishing anything to the blyg is outward-facing —
-  only when Venkat says so.
+  `https://newnature.venkateshrao.com/studio`. Venkat has authorized deploying/publishing changes as we work (2026-11-02);
+  still say what was published.
 
 ## Sibling project: blykker
 
@@ -62,4 +64,4 @@ Everything below is this project's **local config**; it adds to the base and nev
 - **Verification (W2):** for writing, read what changed; for blyg changes, open the live page.
 - **Wrap-up extras (after W5):** W5a — if any blykker-relevant friction came up, add it to `blykker-notes.md`.
 - **Deploy policy:** only if Venkat says so (publishing to the blyg counts).
-- **Carry-overs (S6):** run `scripts/set-blyg-secrets.sh` (studio login is closed until it runs); blyg AI key (see `status.md`).
+- **Carry-overs (S6):** blyg AI key — Venkat pastes `ANTHROPIC_KEY_BLYGS_NEWNATURE` into `Code/.env.keys`, then set it as the Worker's `AI_PROVIDER_KEY` (see `blyg.md`).
