@@ -27,6 +27,8 @@
 
 - 2026-11-02 (evening) — Venkat confirmed all six references. Cover rights recorded (titles.xyz, Bucket Art model, from Humboldt's public-domain Chimborazo diagram) in the new image register `images/index.json`; images renamed to `<book>-<subject>-<variant>-<W>x<H>`; credit added to the title page (published).
 
+- **2026-11-02 15:15 PST — session wrap-up (session 1, ~14:08–15:15).** Created the project and repo, the blyg (personal CF account, deployed from the studio's private config), sibling `blykker` (`blygger/blykker`, public; README states intent + this book as pilot). Book scaffold live and verified (all pages 200, sync dry-run clean). Open: AI key (placeholder in `.env.keys`), print-resolution cover art, start writing Preface/Ch1. Uncommitted by design: one-line index entries in `Publishing/CLAUDE.md` and `Code/CLAUDE.md` (Publishing has other pending edits; Code/ root isn't a repo).
+
 ## Instructions for Agents
 After each work session, update this file:
 1. Change the **Status** field to reflect current state (e.g., `not-started`, `in-progress`, `blocked`, `done`)
