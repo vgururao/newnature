@@ -15,6 +15,7 @@ Repo: `vgururao/newnature` (private, branch `main`).
 | `inbox/` | Raw working materials Venkat drops in — notes, drafts, transcripts, PDFs, images. Unprocessed. See `inbox/README.md`. |
 | `sources.md` | Source material by URL — links to read, cite or mine, with a line on why each matters. |
 | `blyg.md` | The blyg: where it is deployed, how to deploy/upgrade it, and its state. |
+| `book.json` | The book's blykker config: blyg, settings (theme, font), sections and their item ids, reference entries, index terms. Ids are written back by `blykker.py seed`. |
 | `blykker-notes.md` | Requirements for the book-specific client, gathered while writing (see below). |
 | `status.md` | Session log and open items (the Dashboard reads it). |
 | `scripts/` | Project scripts. `set-blyg-secrets.sh` is the one-time secret setup (Rule 1 order). |
@@ -43,8 +44,12 @@ blygger studio client. **This book is its first user and its requirements source
 
 - When the vanilla studio gets in the way of book-shaped work (chapters, ordering, TOC, manuscript
   export, revision of long items…), log it in `blykker-notes.md` here — dated, concrete, one item each.
-- blykker is dormant until Venkat says to start it. Don't write code there from this project.
-- When blykker is ready, this blyg's deployment moves from the vanilla studio to blykker (see `blyg.md`).
+- blykker phase 1 is a config + editorial assistant (`blykker/PLAN.md`). Book structure is edited in the
+  **Contents thread**; then run `../../blygger-protocol/blykker/tools/blykker.py book.json sync` (try
+  `--dry-run` first; a real run publishes, so only when Venkat says so).
+- Markers: `[index: term]: #` on its own line after a paragraph marks an index entry (invisible on the site).
+  Notes and references are fragments; see PLAN.md.
+- If blykker ever forks the studio, this blyg's deployment moves to it (see `blyg.md`).
 
 ## Session rituals
 

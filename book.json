@@ -1,0 +1,70 @@
+{
+  "$format": "blykker book config v0 — see Code/blygger-protocol/blykker/PLAN.md",
+  "blyg": "https://newnature.venkateshrao.com",
+  "password": { "file": ".env", "var": "BLYG_NEWNATURE_OWNER_PASSWORD" },
+
+  "title": "New Nature",
+  "subtitle": "",
+  "author": "Venkatesh Rao",
+  "notes": "chapter",
+
+  "settings": {
+    "siteTitle": "New Nature",
+    "authorName": "Venkatesh Rao",
+    "authorUrl": "https://venkateshrao.com",
+    "font": "book",
+    "theme": "custom",
+    "customThemeName": "Book",
+    "customTheme": {
+      "dark": false,
+      "page": "#ece6da", "paper": "#fbf8f1",
+      "ink": "#262321", "inkSoft": "#6e665c", "rule": "#e2dacb", "pencil": "#8c3b2e",
+      "genBg": "#f3ecdf", "genRule": "#dccbb0"
+    },
+    "linksPosition": "left",
+    "linksBlyggerOrg": false,
+    "linksBlyggerCom": false
+  },
+
+  "sections": {
+    "cover": {
+      "role": "cover", "title": "Cover", "id": null,
+      "seed": "# New Nature\n\n*Venkatesh Rao*\n\n*A book in progress. Cover image to come.*\n\n[[{toc} | Begin reading →]]"
+    },
+    "toc": {
+      "role": "toc", "title": "Contents", "id": null,
+      "seed": "# Contents\n\n- [[{ch1} | Chapter 1: Introduction]]\n- [[{references} | References]]\n- [[{index} | Index]]"
+    },
+    "ch1": {
+      "role": "chapter", "title": "Chapter 1: Introduction", "id": null,
+      "seed": "# Chapter 1: Introduction\n\n*Draft in progress.*"
+    },
+    "references": {
+      "role": "references", "title": "References", "id": null,
+      "seed": "# References"
+    },
+    "index": {
+      "role": "index", "title": "Index", "id": null,
+      "seed": "# Index"
+    }
+  },
+
+  "references": [
+    { "key": "rao-2026-new-nature", "id": null,
+      "entry": "Rao, Venkatesh. “New Nature.” *Protocolized*, June 17, 2026. <https://protocolized.io/features/new-nature>" },
+    { "key": "rao-2026-inventing", "id": null,
+      "entry": "Rao, Venkatesh. “Inventing New Nature.” *Protocolized*, May 12, 2026. <https://protocolized.io/p/inventing-new-nature>" },
+    { "key": "rao-2026-fabric", "id": null,
+      "entry": "Rao, Venkatesh. “The Fabric and the Brain.” *Protocolized*, March 31, 2026. <https://protocolized.io/p/the-fabric-and-the-brain>" },
+    { "key": "rao-2026-theorizing", "id": null,
+      "entry": "Rao, Venkatesh. “Theorizing Protocolization I: New Nature.” *Protocolized*, January 8, 2026. <https://protocolized.io/p/theorizing-protocolization-i-new>" },
+    { "key": "rao-2025-evil-twin", "id": null,
+      "entry": "Rao, Venkatesh. “Constructing the Evil Twin of AI.” *Protocolized*, October 15, 2025. <https://protocolized.io/p/constructing-the-evil-twin-of-ai>" },
+    { "key": "wulf-2015", "id": null,
+      "entry": "Wulf, Andrea. *The Invention of Nature: Alexander von Humboldt’s New World*. New York: Knopf, 2015." }
+  ],
+
+  "index": {
+    "terms": ["hardness", "immutability"]
+  }
+}

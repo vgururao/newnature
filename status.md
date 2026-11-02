@@ -17,10 +17,13 @@
 - **Owner secrets not set** — run `! bash scripts/set-blyg-secrets.sh` (generates, shows, saves to `.env`, registers in `Code/.env.keys`, then sets the Worker secrets). Studio login is closed until then.
 - **No AI key on the blyg** — needs its own `ANTHROPIC_KEY_BLYGS_NEWNATURE` (one key per blyg Worker); logged in `Code/devops/status.md`.
 - Studio settings: title, author, bio (default title is "blyg").
+- **Seed the book** once secrets are set: `../../blygger-protocol/blykker/tools/blykker.py book.json seed` creates and publishes cover, Contents, Chapter 1, References (6 reference fragments) and Index, then syncs nav, front page, links sidebar and theme. Prepared, not run.
 - Start dropping materials in `inbox/` and links in `sources.md`; first chapter when ready.
 
 ## Notes
 - 2026-11-02 — Project created. Local git repo `main`, GitHub `vgururao/newnature` (private). Inbox, `sources.md`, `blykker-notes.md`, `blyg.md`. Blyg provisioned on the personal Cloudflare account: D1 `blyg-newnature`, R2 `blyg-newnature-media`, Worker `blyg-newnature` on Custom Domain `newnature.venkateshrao.com`, deployed from the studio repo's private config (`newnature` env) at v0.50.0; live checks pass. Sibling project `Code/blygger-protocol/blykker` created dormant (GitHub `blygger/blykker`, public, created after Venkat granted permission). Secret generation by Claude was blocked by the auto-mode classifier, so it is a script for Venkat to run.
+
+- 2026-11-02 (later) — Book-blyg design: `book.json` (settings, sections, 6 references, index terms hardness/immutability), driven by blykker phase 1 (`blykker/PLAN.md`, `tools/blykker.py`, `design/book-layout.html`). Seeding blocked until the owner secrets exist.
 
 ## Instructions for Agents
 After each work session, update this file:
