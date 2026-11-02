@@ -17,10 +17,11 @@
 - **Owner secrets not set** — run `! bash scripts/set-blyg-secrets.sh` (generates, shows, saves to `.env`, registers in `Code/.env.keys`, then sets the Worker secrets). Studio login is closed until then.
 - **No AI key on the blyg** — needs its own `ANTHROPIC_KEY_BLYGS_NEWNATURE` (one key per blyg Worker); logged in `Code/devops/status.md`.
 - Studio settings: title, author, bio (default title is "blyg").
+- Create `blygger/blykker` on GitHub (public) and push the local blykker repo — needs Venkat's OK.
 - Start dropping materials in `inbox/` and links in `sources.md`; first chapter when ready.
 
 ## Notes
-- 2026-11-02 — Project created. Local git repo `main`, GitHub `vgururao/newnature` (private). Inbox, `sources.md`, `blykker-notes.md`, `blyg.md`. Blyg provisioned on the personal Cloudflare account: D1 `blyg-newnature`, R2 `blyg-newnature-media`, Worker `blyg-newnature` on Custom Domain `newnature.venkateshrao.com`, deployed from the studio repo's private config (`newnature` env) at v0.50.0; live checks pass. Sibling project `Code/blygger-protocol/blykker` (repo `blygger/blykker`) created dormant. Secret generation by Claude was blocked by the auto-mode classifier, so it is a script for Venkat to run.
+- 2026-11-02 — Project created. Local git repo `main`, GitHub `vgururao/newnature` (private). Inbox, `sources.md`, `blykker-notes.md`, `blyg.md`. Blyg provisioned on the personal Cloudflare account: D1 `blyg-newnature`, R2 `blyg-newnature-media`, Worker `blyg-newnature` on Custom Domain `newnature.venkateshrao.com`, deployed from the studio repo's private config (`newnature` env) at v0.50.0; live checks pass. Sibling project `Code/blygger-protocol/blykker` created dormant (local repo; GitHub `blygger/blykker` not yet created — the auto-mode classifier blocked creating a public repo). Secret generation by Claude was blocked by the auto-mode classifier, so it is a script for Venkat to run.
 
 ## Instructions for Agents
 After each work session, update this file:
