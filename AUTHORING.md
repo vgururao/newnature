@@ -10,7 +10,7 @@ references, the index, the menus and the cover link in step with them. Conventio
 | Section | Item | Notes |
 |---|---|---|
 | Cover (front page) | `2sj0bb5vpy606f545190mhjfrt` | Cover image + links. "Start reading" follows the first Contents entry. |
-| Title page | `0qz1zryj43v0ey4wt31f10xzzk` | |
+| Title page | `0qz1zryj43v0ey4wt31f10xzzk` | Carries the cover credit. |
 | Contents | `0ajsfe9jk0rrctr9x76j0xf6fz` | **Defines the book's order.** |
 | Preface | `3sfmhy8dmsxqrk3wtg3we4a9dk` | |
 | Chapter 1: Introduction | `78yzqsnjsjw5qcaza3xe4sk3qv` | |
@@ -71,8 +71,10 @@ used (currently: hardness, immutability).
 [source: https://…]: #
 [print: images/print/fig-1-1.tif]: #
 ```
-Transclude it in the chapter with `![[imgid]]` on its own line. Print-resolution files go in
-`images/print/` here (Dropbox only). Sync warns about images missing rights, source or a print file.
+Transclude it in the chapter with `![[imgid]]` on its own line. Register every image in
+`images/index.json` (files, credit, rights, where it's used). Naming and folders are in
+`images/README.md`. Print-resolution files go in `images/print/` (Dropbox only). Sync warns about
+images missing rights, source or a print file.
 
 ## Running sync
 

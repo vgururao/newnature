@@ -16,7 +16,7 @@ Repo: `vgururao/newnature` (private, branch `main`).
 | `sources.md` | Source material by URL — links to read, cite or mine, with a line on why each matters. |
 | `blyg.md` | The blyg: where it is deployed, how to deploy/upgrade it, and its state. |
 | `AUTHORING.md` | **How to write the book in the studio**: section item ids, chapters, notes, references, index terms, images, running sync. |
-| `images/` | Cover source + composed web cover (`scripts/make_cover.py`); `images/print/` for print-resolution files (Dropbox only). |
+| `images/` | All book images, named `<book>-<subject>-<variant>-<W>x<H>`. **`images/index.json` is the image register** (files, credit, rights, blyg media URL, where used). `images/print/` is Dropbox only. See `images/README.md`. |
 | `book.json` | The book's blykker config: blyg, settings (theme, font), sections and their item ids, reference entries, index terms. Ids are written back by `blykker.py seed`. |
 | `blykker-notes.md` | Requirements for the book-specific client, gathered while writing (see below). |
 | `status.md` | Session log and open items (the Dashboard reads it). |

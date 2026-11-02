@@ -1,16 +1,16 @@
 #!/opt/homebrew/bin/python3
 """Compose the cover: the illustration above a title panel (book-jacket proportions).
 
-  scripts/make_cover.py   -> images/cover/cover-web.jpg (1600 px wide)
+  scripts/make_cover.py   -> images/cover/new-nature-cover-web-1600x1850.jpg
 
 The source illustration is 1024x768, so this is a web cover only; a print cover
-needs a higher-resolution source (see images/cover/README.md).
+needs a higher-resolution source (see images/index.json).
 """
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = Path(__file__).resolve().parent.parent / "images" / "cover"
-SRC, OUT = HERE / "newnaturecover-original.png", HERE / "cover-web.jpg"
+SRC, OUT = HERE / "new-nature-cover-art-1024x768.png", HERE / "new-nature-cover-web-1600x1850.jpg"
 W = 1600
 TITLE, AUTHOR = "New Nature", "VENKATESH RAO"
 SUBTITLE = ["How artificial intelligence and computational", "hardness are rewilding the planet"]

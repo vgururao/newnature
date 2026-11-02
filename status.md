@@ -15,8 +15,7 @@
 
 ## Active / Open
 - **AI key:** paste the Anthropic key into `Code/.env.keys` → `ANTHROPIC_KEY_BLYGS_NEWNATURE=` (placeholder there), then Claude sets it as the Worker's `AI_PROVIDER_KEY` and registers it in `devops/warnings-keys.md`.
-- **References:** six seeded (talk page, four essays, Wulf). Venkat had said "the 3 links"; trim if needed (withdraw in the studio, remove from `book.json`).
-- Cover image rights/origin not yet recorded (`images/cover/README.md`); source is 1024 px, not print-ready.
+- Cover art is 1024 px, not print-ready; needs a higher-resolution source for print.
 - Start writing: Preface and Chapter 1 are placeholders. See `AUTHORING.md`.
 
 ## Notes
@@ -25,6 +24,8 @@
 - 2026-11-02 (later) — Book-blyg design: `book.json` (settings, sections, 6 references, index terms hardness/immutability), driven by blykker phase 1 (`blykker/PLAN.md`, `tools/blykker.py`, `design/book-layout.html`). Seeding blocked until the owner secrets exist.
 
 - 2026-11-02 (evening) — Owner secrets set (script run by Claude on Venkat's go-ahead; registered in `.env.keys`, copy in `.env`); AI key placeholder added. Composed cover (`scripts/make_cover.py`). Seeded and published via blykker: cover (front page), title page, Contents, Preface, Chapter 1, References + 6 reference fragments, Index (hardness, immutability), About. Masthead menu = Contents · Start reading · About; bottom links = Blykker line. Custom "Book" palette, book font. `AUTHORING.md` written. Verified by screenshots.
+
+- 2026-11-02 (evening) — Venkat confirmed all six references. Cover rights recorded (titles.xyz, Bucket Art model, from Humboldt's public-domain Chimborazo diagram) in the new image register `images/index.json`; images renamed to `<book>-<subject>-<variant>-<W>x<H>`; credit added to the title page (published).
 
 ## Instructions for Agents
 After each work session, update this file:

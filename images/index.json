@@ -1,0 +1,29 @@
+{
+  "$note": "Image register for New Nature: every image in the book, its files, where it appears, and its rights. One entry per image; variants (source, web, print) are listed under it. See images/README.md.",
+  "images": [
+    {
+      "key": "cover",
+      "title": "New Nature cover",
+      "kind": "cover",
+      "alt": "New Nature: How artificial intelligence and computational hardness are rewilding the planet, by Venkatesh Rao",
+      "credit": "Cover art created with titles.xyz using the Bucket Art model, based on the public-domain Mt. Chimborazo diagram by Alexander von Humboldt.",
+      "rights": {
+        "status": "AI-generated artwork made by the author; derived from a public-domain source",
+        "tool": "titles.xyz, Bucket Art model",
+        "based_on": "Alexander von Humboldt, Mt. Chimborazo diagram (public domain)",
+        "recorded": "2026-11-02, from Venkat"
+      },
+      "files": {
+        "source": { "path": "images/cover/new-nature-cover-art-1024x768.png", "px": [1024, 768], "note": "Art as supplied (originally ~/Desktop/newnaturecover.png)." },
+        "web": { "path": "images/cover/new-nature-cover-web-1600x1850.jpg", "px": [1600, 1850], "made_by": "scripts/make_cover.py", "note": "Art over a title panel." },
+        "print": null
+      },
+      "print_status": "Not print-ready: a 6×9 in cover at 300 dpi needs ~1800×2700 px of art. Needs a higher-resolution source.",
+      "blyg": {
+        "media_url": "https://newnature.venkateshrao.com/media/4wst9tf9/5a3b5c3832b7a9bd4e150814fd969b04f9eaf304f192d26983dcf934baeff52d.jpg",
+        "used_in": [{ "section": "cover", "item": "2sj0bb5vpy606f545190mhjfrt" }],
+        "credited_in": [{ "section": "title", "item": "0qz1zryj43v0ey4wt31f10xzzk" }]
+      }
+    }
+  ]
+}
