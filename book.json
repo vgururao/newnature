@@ -52,7 +52,7 @@
     ],
     "bottom": [
       {
-        "label": "Made with Blykker, a new blygger protocol client based on Blygger Studio, designed for writing and publishing books",
+        "label": "Made with Blykker, a configuration and mod for the studio client that makes it suitable for a book blyg, or blyk",
         "url": "https://github.com/blygger/blykker"
       }
     ]
