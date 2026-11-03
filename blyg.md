@@ -14,7 +14,7 @@
 | D1 | `blyg-newnature` (`7b9534e4-fc27-4874-8a83-0001d066f7a6`) |
 | R2 | `blyg-newnature-media` |
 | Secrets | `OWNER_PASSWORD`, `COOKIE_SECRET` — registry names `BLYG_NEWNATURE_*` in `Code/.env.keys`, copy in this project's `.env` |
-| AI | `AI_PROVIDER_KEY` = `ANTHROPIC_KEY_BLYGS_VENKATESHRAO` (the personal blyg key: one blyg key per accounting org, `devops/decisions.md` 2026-11-02); models via `book.json`: claude-sonnet-5-5 for general and TK, claude-haiku-4-5 for changelog notes |
+| AI | `AI_PROVIDER_KEY` = `ANTHROPIC_KEY_BLYGS_VENKATESHRAO` (the personal blyg key: one blyg key per org, an org = its own GitHub org; `devops/decisions.md` 2026-11-02); models via `book.json`: claude-sonnet-5-5 for general and TK, claude-haiku-4-5 for changelog notes |
 
 **The deploy config lives in the studio repo, not here.** It is the `newnature` env in
 `Code/blygger-protocol/blygger-studio/wrangler.private.jsonc` and the matching target in its
