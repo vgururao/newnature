@@ -28,7 +28,7 @@
 
 - **2026-11-02 15:15 PST — session wrap-up (session 1, ~14:08–15:15).** Created the project and repo, the blyg (personal CF account, deployed from the studio's private config), sibling `blykker` (`blygger/blykker`, public; README states intent + this book as pilot). Book scaffold live and verified (all pages 200, sync dry-run clean). Open: AI key (placeholder in `.env.keys`), print-resolution cover art, start writing Preface/Ch1. Uncommitted by design: one-line index entries in `Publishing/CLAUDE.md` and `Code/CLAUDE.md` (Publishing has other pending edits; Code/ root isn't a repo).
 
-- 2026-11-02 15:25 PST — AI enabled: Worker `AI_PROVIDER_KEY` set from `ANTHROPIC_KEY_BLYGS_VENKATESHRAO` (shared on Venkat's instruction; exception recorded in `.env.keys`, `devops/warnings-keys.md`); `aiModel`/`aiModelTk`/`aiModelChangelog` = claude-sonnet-5-5 in `book.json`, synced.
+- 2026-11-02 15:25 PST — AI enabled: Worker `AI_PROVIDER_KEY` set from `ANTHROPIC_KEY_BLYGS_VENKATESHRAO` (shared on Venkat's instruction; exception recorded in `.env.keys`, `devops/warnings-keys.md`); `aiModel`/`aiModelTk` = claude-sonnet-5-5, `aiModelChangelog` = claude-haiku-4-5 (Venkat) in `book.json`, synced.
 
 ## Instructions for Agents
 After each work session, update this file:

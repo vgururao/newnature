@@ -33,7 +33,7 @@
     "authorBio": "Writer and consultant; Director of Research, Protocol Institute.",
     "aiModel": "claude-sonnet-5-5",
     "aiModelTk": "claude-sonnet-5-5",
-    "aiModelChangelog": "claude-sonnet-5-5"
+    "aiModelChangelog": "claude-haiku-4-5"
   },
   "menu": {
     "top": [
