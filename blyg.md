@@ -14,7 +14,7 @@
 | D1 | `blyg-newnature` (`7b9534e4-fc27-4874-8a83-0001d066f7a6`) |
 | R2 | `blyg-newnature-media` |
 | Secrets | `OWNER_PASSWORD`, `COOKIE_SECRET` — registry names `BLYG_NEWNATURE_*` in `Code/.env.keys`, copy in this project's `.env` |
-| AI | none yet — needs its own Anthropic key (`ANTHROPIC_KEY_BLYGS_NEWNATURE`, one key per blyg Worker) |
+| AI | `AI_PROVIDER_KEY` = `ANTHROPIC_KEY_BLYGS_VENKATESHRAO` (shared with the venkateshrao blyg, Venkat's choice 2026-11-02); models claude-sonnet-5-5 (general, TK, changelog) via `book.json` |
 
 **The deploy config lives in the studio repo, not here.** It is the `newnature` env in
 `Code/blygger-protocol/blygger-studio/wrangler.private.jsonc` and the matching target in its
@@ -39,5 +39,5 @@ When blykker forks, its own private config takes over the `newnature` env and th
 - 2026-11-02 — Owner secrets set (`scripts/set-blyg-secrets.sh`). Settings (title, author, theme, menus,
   front page) are applied by `blykker.py sync` from `book.json`. Change them there, not in the studio,
   or the next sync reverts them.
-- **Pending:** `AI_PROVIDER_KEY`. Once the key is in `Code/.env.keys`:
+- 2026-11-02 — `AI_PROVIDER_KEY` set from `ANTHROPIC_KEY_BLYGS_VENKATESHRAO`. If that key is rotated, re-run
   `npx wrangler secret put AI_PROVIDER_KEY --config wrangler.private.jsonc --env newnature` (studio repo).

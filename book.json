@@ -30,7 +30,10 @@
     "linksPosition": "bottom",
     "linksBlyggerOrg": false,
     "linksBlyggerCom": true,
-    "authorBio": "Writer and consultant; Director of Research, Protocol Institute."
+    "authorBio": "Writer and consultant; Director of Research, Protocol Institute.",
+    "aiModel": "claude-sonnet-5-5",
+    "aiModelTk": "claude-sonnet-5-5",
+    "aiModelChangelog": "claude-sonnet-5-5"
   },
   "menu": {
     "top": [

@@ -64,4 +64,4 @@ Everything below is this project's **local config**; it adds to the base and nev
 - **Verification (W2):** for writing, read what changed; for blyg changes, open the live page.
 - **Wrap-up extras (after W5):** W5a — if any blykker-relevant friction came up, add it to `blykker-notes.md`.
 - **Deploy policy:** only if Venkat says so (publishing to the blyg counts).
-- **Carry-overs (S6):** blyg AI key — Venkat pastes `ANTHROPIC_KEY_BLYGS_NEWNATURE` into `Code/.env.keys`, then set it as the Worker's `AI_PROVIDER_KEY` (see `blyg.md`).
+- **Carry-overs (S6):** none
