@@ -18,7 +18,7 @@ Repo: `vgururao/newnature` (private, branch `main`).
 | `AUTHORING.md` | **How to write the book in the studio**: section item ids, chapters, notes, references, index terms, images, running sync. |
 | `images/` | All book images, named `<book>-<subject>-<variant>-<W>x<H>`. **`images/index.json` is the image register** (files, credit, rights, blyg media URL, where used). `images/print/` is Dropbox only. See `images/README.md`. |
 | `book.json` | The book's blykker config: blyg, settings (theme, font), sections and their item ids, reference entries, index terms. Ids are written back by `blykker.py seed`. |
-| `blykker-notes.md` | Requirements for the book-specific client, gathered while writing (see below). |
+| `blykker-notes.md` | Feature to-do and friction log for blykker, gathered while writing (see below). |
 | `status.md` | Session log and open items (the Dashboard reads it). |
 | `scripts/` | Project scripts. `set-blyg-secrets.sh` is the one-time secret setup (Rule 1 order). |
 
@@ -41,8 +41,8 @@ Chapters will get their own folder once writing starts; decide the shape then, n
 
 ## Sibling project: blykker
 
-`Code/blygger-protocol/blykker/` (repo `blygger/blykker`, public) is the book-specific fork of the
-blygger studio client. **This book is its first user and its requirements source.** While writing:
+`Code/blygger-protocol/blykker/` (repo `blygger/blykker`, public) is a configuration-first mod of
+blygger-studio for book-like blygs. **This book is its pilot: its first user and its requirements source.** While writing:
 
 - When the vanilla studio gets in the way of book-shaped work (chapters, ordering, TOC, manuscript
   export, revision of long items…), log it in `blykker-notes.md` here — dated, concrete, one item each.
@@ -51,7 +51,7 @@ blygger studio client. **This book is its first user and its requirements source
   `--dry-run` first; a real run publishes, so only when Venkat says so).
 - Markers: `[index: term]: #` on its own line after a paragraph marks an index entry (invisible on the site).
   Notes and references are fragments; see PLAN.md.
-- If blykker ever forks the studio, this blyg's deployment moves to it (see `blyg.md`).
+- blykker is a mod of the studio, not a client: this blyg stays on stock blygger-studio, with blykker mods compiled in as studio extensions when they exist.
 
 ## Session rituals
 

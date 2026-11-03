@@ -1,7 +1,7 @@
 # The New Nature blyg
 
 **URL:** https://newnature.venkateshrao.com/ — studio at `/studio`.
-**Client:** vanilla `blygger-studio` (0.50.0 at creation), until `blykker` replaces it.
+**Client:** vanilla `blygger-studio` (0.50.0 at creation), with blykker's config applied by `blykker.py sync`. blykker is a studio mod, so the client stays stock.
 
 ## Deployment
 
@@ -30,7 +30,7 @@ npx wrangler d1 migrations apply DB --remote --config wrangler.private.jsonc --e
 npm run build && npx wrangler deploy --config wrangler.private.jsonc --env newnature
 ```
 
-When blykker forks, its own private config takes over the `newnature` env and the studio's entry is removed.
+blykker never forks the studio. If a blykker mod needs code, it is a studio extension compiled into this node through the studio's gitignored `extensions.local.json`.
 
 ## Setup state
 
