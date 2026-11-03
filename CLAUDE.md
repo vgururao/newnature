@@ -19,7 +19,8 @@ Repo: `vgururao/newnature` (private, branch `main`).
 | `images/` | All book images, named `<book>-<subject>-<variant>-<W>x<H>`. **`images/index.json` is the image register** (files, credit, rights, blyg media URL, where used). `images/print/` is Dropbox only. See `images/README.md`. |
 | `book.json` | The book's blykker config: blyg, settings (theme, font), sections and their item ids, reference entries, index terms. Ids are written back by `blykker.py seed`. |
 | `blykker-notes.md` | Feature to-do and friction log for blykker, gathered while writing (see below). |
-| `status.md` | Session log and open items (the Dashboard reads it). |
+| `DEVLOG.md` | Session log, newest first (covers blykker while it is run from here). |
+| `status.md` | Current state and open items (the Dashboard reads it). |
 | `scripts/` | Project scripts. `set-blyg-secrets.sh` is the one-time secret setup (Rule 1 order). |
 
 Chapters will get their own folder once writing starts; decide the shape then, not now.
@@ -59,9 +60,19 @@ blygger-studio for book-like blygs. **This book is its pilot: its first user and
 Everything below is this project's **local config**; it adds to the base and never replaces it.
 
 **Ritual config**
-- **Log:** `status.md` (dated entries). Add a `vgr-books/registry.json` entry once the book reaches beta (Publishing convention).
-- **Startup extras (S5):** list anything new in `inbox/` since the last session (`git status --short inbox/` plus untracked binaries via `ls -t inbox/ | head`).
-- **Verification (W2):** for writing, read what changed; for blyg changes, open the live page.
-- **Wrap-up extras (after W5):** W5a — if any blykker-relevant friction came up, add it to `blykker-notes.md`.
-- **Deploy policy:** only if Venkat says so (publishing to the blyg counts).
+- **Log:** `DEVLOG.md`, one numbered entry per session, newest first, covering blykker work too.
+  `status.md` holds state and *Active / Open* (the Dashboard reads it). Add a `vgr-books/registry.json`
+  entry once the book reaches beta (Publishing convention).
+- **Scope:** this project **runs blykker** (`Code/blygger-protocol/blykker/`) until blykker is managed on
+  its own. Every step covers both repos.
+- **Startup extras (S5):** (a) anything new in `inbox/` since the last session (`git status --short inbox/`,
+  `ls -t inbox/ | head`); (b) blykker repo state (`git -C ../../blygger-protocol/blykker status --short`,
+  unpushed commits); (c) `blykker.py book.json sync --dry-run`, which should report no changes. Any change it
+  reports is a structural edit made in the studio since the last sync.
+- **Verification (W2):** live section pages 200 and generator string; `sync --dry-run` clean; for writing,
+  read what changed; for layout or menu changes, look at the page (headless Chrome screenshot).
+- **Wrap-up extras (after W5):** W5a — friction or feature ideas go in `blykker-notes.md`. W5b — blykker:
+  commit and push, add a one-line state note to `blykker/status.md`, keep `book.template.json` in step with
+  `book.json` when the format changes.
+- **Deploy policy:** deploy and publish to the blyg as we work (Venkat, 2026-11-02); say what was published.
 - **Carry-overs (S6):** none
