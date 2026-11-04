@@ -9,12 +9,15 @@
 ## Outputs
 | Format | Status | Notes |
 |--------|--------|-------|
-| Site   | in-progress | Blyg live at newnature.venkateshrao.com — book scaffold published (vanilla studio 0.50.0 + blykker sync) |
+| Site   | in-progress | Blyg live at newnature.venkateshrao.com — book scaffold published (vanilla studio, 0.52.0 as of 2026-11-04, + blykker sync) |
 | Ebook  | not-started | |
 | Print  | not-started | |
 
 ## Active / Open
-- **Feature to-do** (`blykker-notes.md`): manuscript statistics; composition start page; rebuild navigation when Contents change.
+- ⚠️ **Don't run `blykker.py sync` (for real) until the sync hazard is fixed.** It would publish the Preface's unpublished draft (DEVLOG session 2).
+- Word-count extension: blygger-studio PR #117 open. To use it here: merge, add `"word-count"` to the studio's `extensions.local.json`, deploy, enable in Settings.
+- Planned in `blykker/PLAN.md`: editions; several books on one blyg (shelf + book projects, hoppers). Decisions recorded there.
+- **Feature to-do** (`blykker-notes.md`): manuscript statistics (word counts started, PR #117); editions; several books on one blyg; composition start page; rebuild navigation when Contents change.
 - Cover art is 1024 px, not print-ready; needs a higher-resolution source for print.
 - Start writing: Preface and Chapter 1 are placeholders. See `AUTHORING.md`.
 
