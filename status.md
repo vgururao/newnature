@@ -15,9 +15,9 @@
 
 ## Active / Open
 - ⚠️ **Don't run `blykker.py sync` (for real) until the sync hazard is fixed.** It would publish the Preface's unpublished draft (DEVLOG session 2).
-- Word-count extension: blygger-studio PR #117 open. To use it here: merge, add `"word-count"` to the studio's `extensions.local.json`, deploy, enable in Settings.
+- Word-count extension: live here since studio 0.54.0 (2026-11-05, PR #117). Compiled in through the studio's gitignored `extensions.local.json` and enabled in Settings.
 - Planned in `blykker/PLAN.md`: editions; several books on one blyg (shelf + book projects, hoppers). Decisions recorded there.
-- **Feature to-do** (`blykker-notes.md`): manuscript statistics (word counts started, PR #117); editions; several books on one blyg; composition start page; rebuild navigation when Contents change.
+- **Feature to-do** (`blykker-notes.md`): manuscript statistics (word counts in the studio since 0.54.0); editions; several books on one blyg; composition start page; rebuild navigation when Contents change.
 - Cover art is 1024 px, not print-ready; needs a higher-resolution source for print.
 - Start writing: Preface and Chapter 1 are placeholders. See `AUTHORING.md`.
 
