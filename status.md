@@ -14,7 +14,8 @@
 | Print  | not-started | |
 
 ## Active / Open
-- ⚠️ **Don't run `blykker.py sync` (for real) until the sync hazard is fixed.** It would publish the Preface's unpublished draft (DEVLOG session 2).
+- Book dashboard prototype live 2026-11-06 at `/studio/ext/book-dashboard` (`mods/book-dashboard/`, Worker version `d5e93c1e`, studio v0.54.1). Apply untested on the live book. **A deploy that doesn't vendor the mod removes the page**, including `npm run deploy:all` from the studio checkout; see the mod's README.
+- Sync hazard fixed 2026-11-06: sync no longer publishes a section with unpublished edits. Those sections keep stale published nav until they are published.
 - Word-count extension: live here since studio 0.54.0 (2026-11-05, PR #117). Compiled in through the studio's gitignored `extensions.local.json` and enabled in Settings.
 - Planned in `blykker/PLAN.md`: editions; several books on one blyg (shelf + book projects, hoppers). Decisions recorded there.
 - **Feature to-do** (`blykker-notes.md`): manuscript statistics (word counts in the studio since 0.54.0); editions; several books on one blyg; composition start page; rebuild navigation when Contents change.
