@@ -8,11 +8,12 @@ import { BlyggerApi, Button, confirm, toast, unwrap } from '../../../src/ui/exte
 import type { StudioContext, StudioExtension } from '../../../src/ui/extension-api.ts';
 import { applyPlan, restore, type Ops, type Outcome, type Recovery, type RecoveryStore } from './apply.ts';
 import { BOOK } from './book.ts';
-import { actionLabel, authorWords, buildPlan, changedLines, chainOf, describeChange, loadItems, outstanding, statusLine, type ItemLike, type Plan } from './plan.ts';
+import { actionLabel, authorWords, buildPlan, changedLines, chainOf, describeChange, liveText, loadItems, outstanding, statusLine, type Book, type ItemLike, type Plan } from './plan.ts';
+import { crossings, isShelf, parseBook, parseShelf, type ShelfBook } from './shelf.ts';
 import './dashboard.css';
 
 const NAME = 'book-dashboard';
-const TOC = Object.values(BOOK.sections).find((s) => s.role === 'toc')!.id!;
+const TOC = BOOK.sections.toc?.id ?? Object.values(BOOK.sections).find((s) => s.role === 'toc')!.id!;
 const KEY = `${NAME}:recovery:`;
 
 const store: RecoveryStore = {
@@ -41,25 +42,64 @@ function opsFor(context: StudioContext): Ops {
   };
 }
 
-async function load(context: StudioContext) {
+const SELECTED = `${NAME}:book`;
+function readSelected() {
+  try {
+    return localStorage.getItem(SELECTED);
+  } catch {
+    return null;
+  }
+}
+function saveSelected(tocId: string) {
+  try {
+    localStorage.setItem(SELECTED, tocId);
+  } catch { /* the choice just won't be remembered */ }
+}
+
+/**
+ * The selected book, from the shelf if the front page is one. Until then this node has one book,
+ * compiled in from book.json. Others are read too, only to check that no two books share a section.
+ */
+async function load(context: StudioContext, selected: string | null) {
   const ops = opsFor(context);
-  const [items, settings] = await Promise.all([
-    loadItems(BOOK, async (id) => {
-      try {
-        return await ops.get(id);
-      } catch (e) {
-        if ((e as { statusCode?: number }).statusCode === 404) return null;
-        throw e;
-      }
-    }),
-    unwrap(BlyggerApi.getSettings({ client: context.client })),
-  ]);
-  return { items, settings: settings as { authorLinks?: unknown; linksExternal?: unknown } };
+  const getOrNull = async (id: string) => {
+    try {
+      return await ops.get(id);
+    } catch (e) {
+      if ((e as { statusCode?: number }).statusCode === 404) return null;
+      throw e;
+    }
+  };
+  const settings = (await unwrap(BlyggerApi.getSettings({ client: context.client }))) as { authorLinks?: unknown; linksExternal?: unknown; frontPage?: string | null };
+  const front = settings.frontPage ? await getOrNull(settings.frontPage) : null;
+  let book: Book = BOOK;
+  let title = 'New Nature';
+  let books: ShelfBook[] = [];
+  let others: { title: string; book: Book; toc: ItemLike }[] = [];
+  if (front && isShelf(liveText(front))) {
+    const shelf = parseShelf(liveText(front));
+    books = shelf.books;
+    if (!books.length) throw new Error('The shelf lists no books.');
+    const chosen = books.find((b) => b.tocId === selected) ?? books[0];
+    const parsed = await Promise.all(books.map(async (b) => {
+      const toc = await getOrNull(b.tocId);
+      if (!toc) throw new Error(`The shelf lists ${b.title}, but its Contents doesn't resolve.`);
+      return { ...b, toc, book: parseBook(BOOK.blyg, b.tocId, liveText(toc), shelf) };
+    }));
+    const mine = parsed.find((b) => b.tocId === chosen.tocId)!;
+    book = mine.book;
+    title = mine.title;
+    others = parsed.filter((b) => b !== mine);
+    const shared = crossings(book, mine.toc, others);
+    if (shared.length) throw new Error(`${title} and ${shared[0].book} both claim ${shared.map((c) => c.id).join(', ')}. Chains can't cross books, so fix the Contents first.`);
+  }
+  const items = await loadItems(book, getOrNull);
+  return { items, settings, book, title, books };
 }
 
 /** A section the Contents lists but the node can't serve can't be planned for, so it isn't a clean bill of health. */
-function checkedPlan({ items, settings }: Awaited<ReturnType<typeof load>>) {
-  const plan = buildPlan(BOOK, items, settings);
+function checkedPlan({ items, settings, book }: Awaited<ReturnType<typeof load>>) {
+  const plan = buildPlan(book, items, settings);
   const missing = plan.chain.filter(([id]) => !items.has(id));
   if (missing.length) throw new Error(`The Contents lists something that doesn't resolve: ${missing.map((c) => c[1]).join(', ')}.`);
   return plan;
@@ -107,16 +147,18 @@ const statusClass = (status: Status) =>
     : status.kind !== 'checked' ? ''
     : outstanding(status.plan).pending.length || status.plan.menu ? 'book-dashboard-status-due' : 'book-dashboard-status-ok';
 
-function Sections({ context, items, plan }: { context: StudioContext; items: Map<string, ItemLike>; plan?: Plan }) {
+function Sections({ context, book, items, plan }: { context: StudioContext; book: Book; items: Map<string, ItemLike>; plan?: Plan }) {
   const pending = new Set(plan ? outstanding(plan).pending.map((s) => s.id) : []);
   const held = new Set(plan ? outstanding(plan).held.map((s) => s.id) : []);
-  const chain = chainOf(BOOK, items.get(TOC)!);
+  const chain = chainOf(book, items.get(book.sections.toc.id!)!);
   const inChain = new Set(chain.map((c) => c[0]));
-  const others = Object.values(BOOK.sections).filter((s) => s.id && !inChain.has(s.id)).map((s) => [s.id!, s.title] as [string, string]);
+  const others = Object.values(book.sections).filter((s) => s.id && !inChain.has(s.id)).map((s) => [s.id!, s.title] as [string, string]);
   const rows = [...chain, ...others].filter(([id]) => items.has(id));
   const live = (item: ItemLike) => (item.published ? authorWords(item.published.contentMd) : 0);
-  const totalLive = rows.reduce((n, [id]) => n + live(items.get(id)!), 0);
-  const totalDraft = rows.reduce((n, [id]) => n + authorWords(items.get(id)!.contentMd), 0);
+  // About is the shelf's, not this book's.
+  const counted = rows.filter(([id]) => id !== book.sections.about?.id);
+  const totalLive = counted.reduce((n, [id]) => n + live(items.get(id)!), 0);
+  const totalDraft = counted.reduce((n, [id]) => n + authorWords(items.get(id)!.contentMd), 0);
   return (
     <table className="book-dashboard-table">
       <thead>
@@ -217,18 +259,18 @@ interface Report {
   notReached: string[];
 }
 
-const REPORT_KEY = `${NAME}:last-report`;
-function readReport(): Report | null {
+const REPORT_KEY = `${NAME}:last-report:`;
+function readReport(tocId: string): Report | null {
   try {
-    return JSON.parse(localStorage.getItem(REPORT_KEY) ?? 'null') as Report | null;
+    return JSON.parse(localStorage.getItem(REPORT_KEY + tocId) ?? 'null') as Report | null;
   } catch {
     return null;
   }
 }
-function writeReport(report: Report | null) {
+function writeReport(tocId: string, report: Report | null) {
   try {
-    if (report) localStorage.setItem(REPORT_KEY, JSON.stringify(report));
-    else localStorage.removeItem(REPORT_KEY);
+    if (report) localStorage.setItem(REPORT_KEY + tocId, JSON.stringify(report));
+    else localStorage.removeItem(REPORT_KEY + tocId);
   } catch { /* it still shows until the page is left */ }
 }
 
@@ -308,24 +350,29 @@ function Recoveries({ context, records, refresh }: { context: StudioContext; rec
 }
 
 function Dashboard({ context }: { context: StudioContext }) {
-  const [items, setItems] = useState<Map<string, ItemLike>>();
-  const [report, setReport] = useState<Report | null>(() => readReport());
+  const [loaded, setLoaded] = useState<Awaited<ReturnType<typeof load>>>();
+  const [report, setReport] = useState<Report | null>(null);
   const [busy, setBusy] = useState(false);
   const [records, setRecords] = useState<Recovery[]>([]);
   const [status, setStatus] = useState<Status>({ kind: 'checking' });
   const busyRef = useRef(false);
   busyRef.current = busy;
+  const selected = useRef(readSelected());
+  const request = useRef(0);
   const refreshRecords = useCallback(() => setRecords(store.list()), []);
 
   // Reads only. A failure says so: it must never look like "up to date".
   const check = useCallback(async () => {
+    const mine = ++request.current;
     try {
-      const loaded = await load(context);
-      const next = checkedPlan(loaded);
-      setItems(loaded.items);
-      setStatus({ kind: 'checked', plan: next });
+      const next = await load(context, selected.current);
+      const plan = checkedPlan(next);
+      if (mine !== request.current) return;
+      setLoaded(next);
+      setReport(readReport(next.book.sections.toc.id!));
+      setStatus({ kind: 'checked', plan });
     } catch (e) {
-      setStatus({ kind: 'error', message: e instanceof Error ? e.message : String(e) });
+      if (mine === request.current) setStatus({ kind: 'error', message: e instanceof Error ? e.message : String(e) });
     }
   }, [context]);
   useEffect(() => {
@@ -339,6 +386,14 @@ function Dashboard({ context }: { context: StudioContext }) {
     return () => window.removeEventListener('focus', onFocus);
   }, []);
 
+  const choose = (tocId: string) => {
+    selected.current = tocId;
+    saveSelected(tocId);
+    setStatus({ kind: 'checking' });
+    setLoaded(undefined);
+    setReport(null);
+    void check();
+  };
   const checkAgain = () => {
     setBusy(true);
     void check().finally(() => setBusy(false));
@@ -346,7 +401,8 @@ function Dashboard({ context }: { context: StudioContext }) {
   const plan = status.kind === 'checked' ? status.plan : undefined;
   const label = plan ? actionLabel(plan) : null;
   const rebuild = () => {
-    if (!plan) return;
+    if (!plan || !loaded) return;
+    const tocId = loaded.book.sections.toc.id!;
     setBusy(true);
     void context.run(async () => {
       const titles = planTitles(plan);
@@ -359,7 +415,7 @@ function Dashboard({ context }: { context: StudioContext }) {
         rows: outcomes.map((o) => ({ ...o, changes: changes.get(o.id) ?? [] })),
         notReached: [...plan.sections.filter((s) => !reached.has(s.id)).map((s) => s.title), ...(plan.menu && !reached.has('menu') ? ['Menu'] : [])],
       };
-      writeReport(next);
+      writeReport(tocId, next);
       setReport(next);
       refreshRecords();
       await check();
@@ -368,7 +424,15 @@ function Dashboard({ context }: { context: StudioContext }) {
 
   return (
     <div className="book-dashboard" data-extension-page={NAME}>
-      <h1>New Nature</h1>
+      {loaded && loaded.books.length > 1 ? (
+        <label className="book-dashboard-shelf">
+          Bookshelf
+          <select data-bookshelf disabled={busy} value={loaded.book.sections.toc.id} onChange={(e) => choose(e.target.value)}>
+            {loaded.books.map((b) => <option key={b.tocId} value={b.tocId}>{b.title}</option>)}
+          </select>
+        </label>
+      ) : null}
+      <h1>{loaded?.title ?? ''}</h1>
       <p className="book-dashboard-sub">Private to you. Readers never see this page.</p>
       <div className={`book-dashboard-status ${statusClass(status)}`}>
         <RebuildStatus status={status} />
@@ -383,9 +447,9 @@ function Dashboard({ context }: { context: StudioContext }) {
         <p className="book-dashboard-warning">Close other tabs editing these sections first. Their drafts are swapped out for a moment, and an open editor will report a conflict.</p>
       ) : null}
       {plan ? <Pending context={context} plan={plan} /> : null}
-      {report ? <ResultReport context={context} report={report} dismiss={() => { writeReport(null); setReport(null); }} /> : null}
+      {report ? <ResultReport context={context} report={report} dismiss={() => { if (loaded) writeReport(loaded.book.sections.toc.id!, null); setReport(null); }} /> : null}
       <Recoveries context={context} records={records} refresh={refreshRecords} />
-      {items ? <Sections context={context} items={items} plan={plan} /> : null}
+      {loaded ? <Sections context={context} book={loaded.book} items={loaded.items} plan={plan} /> : null}
     </div>
   );
 }
@@ -407,5 +471,5 @@ export const extension: StudioExtension = {
         · dashboard
       </a>
     ) : null,
-  page: { title: 'Dashboard', component: Dashboard },
+  page: { title: 'Dashboard', mainMenu: { icon: '⌂' }, component: Dashboard },
 };

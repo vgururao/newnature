@@ -8,6 +8,8 @@ import { pathToFileURL } from 'node:url';
 const planPath = process.argv[3] ?? resolve(import.meta.dirname, '../extension/ui/plan.ts');
 const { buildPlan, outstanding, statusLine, spliceBlock } = (await import(pathToFileURL(planPath).href)) as typeof import('../extension/ui/plan.ts');
 const snapshot = JSON.parse(readFileSync(process.argv[2], 'utf8'));
+const { parseBook } = (await import(pathToFileURL(planPath.replace(/plan\.ts$/, 'shelf.ts')).href)) as typeof import('../extension/ui/shelf.ts');
+const { liveText } = (await import(pathToFileURL(planPath).href)) as typeof import('../extension/ui/plan.ts');
 
 let failures = 0;
 const fail = (scenario: string, message: string) => {
@@ -20,7 +22,15 @@ for (const [name, s] of Object.entries<any>(snapshot.scenarios)) {
   // The plan loads what it reads up front; blykker reads lazily. Give it everything either touched.
   for (const i of s.items) if (!items.has(i.id)) items.set(i.id, i);
   const settings = s.settings ? { authorLinks: s.settings.authorLinks, linksExternal: s.settings.linksExternal } : undefined;
-  const plan = buildPlan(snapshot.book, items, settings);
+  // "+markers": the same book read from its Contents, as on a shelf, against the same blykker.py output.
+  const toc = snapshot.book.sections.toc.id;
+  const book = name.endsWith('+markers') ? parseBook(snapshot.book.blyg, toc, liveText(items.get(toc)), { books: [], menu: { top: [], bottom: [] } }) : snapshot.book;
+  if (name.endsWith('+markers')) {
+    for (const key of ['cover', 'title', 'references', 'index']) if (book.sections[key]?.id !== snapshot.book.sections[key].id) fail(name, `${key} marker misread`);
+    if (JSON.stringify(book.references) !== JSON.stringify(snapshot.book.references)) fail(name, 'reference markers misread');
+    if (JSON.stringify(book.indexTerms) !== JSON.stringify(snapshot.book.indexTerms)) fail(name, 'term markers misread');
+  }
+  const plan = buildPlan(book, items, settings);
   const ours = new Map<string, any>(plan.sections.map((p: any) => [p.id, p]));
   let compared = 0;
   for (const [id, write] of Object.entries<any>(s.writes)) {

@@ -27,12 +27,27 @@ From the top:
 The links to the page don't show the status: a link would have to read every section on each Studio page
 load, and an extension can't change core labels such as the one under More.
 
+## The main menu (temporary patch)
+
+`patches/main-menu-slot-pr133.patch` puts Dashboard in the main menu, above compose, with the design of studio
+PR #133, and `install.sh` applies it. **Remove the patch and its lines in `install.sh` when this node upgrades to
+a release that has `page.mainMenu`.** With that design the link moves from More to the menu.
+
+## Books on the shelf
+
+If the front page carries `[blykker-shelf]: #`, the page reads the books from it live, shows a Bookshelf dropdown
+(remembered per browser) and works on the selected book only. If two books claim one section it shows an error
+and offers no rebuild. Otherwise it falls back to the one book compiled in from `book.json`. `extension/ui/shelf.ts`
+has the marker forms, and `shelf/setup.mts` is the ordered change to a shelf, which only runs on a local studio for
+now.
+
 ## Files
 
 | Path | What it is |
 |---|---|
 | `extension/ui/plan.ts` | The port: what a rebuild would change. Pure. |
 | `extension/ui/apply.ts` | Applies a plan, including the swap for sections with drafts. |
+| `extension/ui/shelf.ts` | Reads the shelf and each book from their markers. |
 | `extension/ui/index.tsx`, `dashboard.css` | The page. |
 | `install.sh` | Vendors this into a studio tree and generates `book.ts` from `book.json`. |
 | `test/` | Parity with `blykker.py`, and draft safety against a local studio. |

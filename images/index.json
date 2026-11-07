@@ -14,15 +14,80 @@
         "recorded": "2026-11-02, from Venkat"
       },
       "files": {
-        "source": { "path": "images/cover/new-nature-cover-art-1024x768.png", "px": [1024, 768], "note": "Art as supplied (originally ~/Desktop/newnaturecover.png)." },
-        "web": { "path": "images/cover/new-nature-cover-web-1600x1850.jpg", "px": [1600, 1850], "made_by": "scripts/make_cover.py", "note": "Art over a title panel." },
+        "source": {
+          "path": "images/cover/new-nature-cover-art-1024x768.png",
+          "px": [
+            1024,
+            768
+          ],
+          "note": "Art as supplied (originally ~/Desktop/newnaturecover.png)."
+        },
+        "web": {
+          "path": "images/cover/new-nature-cover-web-1600x1850.jpg",
+          "px": [
+            1600,
+            1850
+          ],
+          "made_by": "scripts/make_cover.py",
+          "note": "Art over a title panel."
+        },
         "print": null
       },
       "print_status": "Not print-ready: a 6×9 in cover at 300 dpi needs ~1800×2700 px of art. Needs a higher-resolution source.",
       "blyg": {
         "media_url": "https://newnature.venkateshrao.com/media/4wst9tf9/5a3b5c3832b7a9bd4e150814fd969b04f9eaf304f192d26983dcf934baeff52d.jpg",
-        "used_in": [{ "section": "cover", "item": "2sj0bb5vpy606f545190mhjfrt" }],
-        "credited_in": [{ "section": "title", "item": "0qz1zryj43v0ey4wt31f10xzzk" }]
+        "used_in": [
+          {
+            "section": "cover",
+            "item": "2sj0bb5vpy606f545190mhjfrt"
+          }
+        ],
+        "credited_in": [
+          {
+            "section": "title",
+            "item": "0qz1zryj43v0ey4wt31f10xzzk"
+          }
+        ]
+      }
+    },
+    {
+      "key": "strange-forest-cover",
+      "title": "The Strange Forest cover",
+      "kind": "cover",
+      "alt": "The Strange Forest, by Venkatesh Rao",
+      "credit": "Cover art by Venkatesh Rao, generated with ChatGPT from the author's prompt. Licensed CC BY 4.0.",
+      "rights": {
+        "status": "AI-generated artwork made by the author",
+        "creator": "Venkatesh Rao",
+        "tool": "ChatGPT, from the author's prompt",
+        "license": "CC BY 4.0",
+        "recorded": "2026-11-06, from Venkat"
+      },
+      "files": {
+        "source": {
+          "path": "images/cover/the-strange-forest-cover-art-1536x1024.png",
+          "px": [
+            1536,
+            1024
+          ],
+          "note": "Art as supplied (~/Desktop/Enchanted Bioluminescent Forest Valley.png; that file is left in place)."
+        },
+        "web": {
+          "path": "images/cover/the-strange-forest-cover-web-1600x1567.jpg",
+          "px": [
+            1600,
+            1567
+          ],
+          "made_by": "scripts/make_cover.py the-strange-forest",
+          "note": "Art, uncropped, over a title panel. Not yet approved or uploaded."
+        },
+        "print": null
+      },
+      "print_status": "Not print-ready: the source is 1536x1024, and it's landscape, so a print cover would need a larger source and a new layout.",
+      "blyg": {
+        "media_url": null,
+        "used_in": [],
+        "credited_in": []
       }
     }
   ]

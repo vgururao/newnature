@@ -1,0 +1,181 @@
+TEMPORARY. Remove when this node upgrades to a studio release that has page.mainMenu.
+Source: the src/ui parts of blygger/blygger-studio PR #133 (feat/ext-page-main-menu), as of 2026-11-06,
+applied to v0.54.1 so this node's Dashboard can sit above compose before that PR is released.
+Same API as the PR: page: { mainMenu: { icon } }. Applied by install.sh.
+
+diff --git a/src/ui/components.tsx b/src/ui/components.tsx
+index eb69057..b8a435d 100644
+--- a/src/ui/components.tsx
++++ b/src/ui/components.tsx
+@@ -22,6 +22,8 @@ import { readState } from '../versions.ts';
+ import { displayUrl } from '../importer/util.ts';
+ import { Sheet } from './sheets.tsx';
+ import { SetupBanner } from './setup.tsx';
++import { compiledExtensions } from '../../build/extensions.ui.ts';
++import { enabledExtensions, mainMenuPage } from './extensions.tsx';
+ import { applyTheme } from './theme.ts';
+ import { applyTitle } from './tab.ts';
+ import type { CustomTheme } from '../themes.ts';
+@@ -247,6 +249,8 @@ export function Layout({ children }: { children: ReactNode }) {
+     editedItem?.status === 'public' ? publicPath(editedItem) : `${mount}/`;
+   const behind = !!(settings?.updateCheck && update?.behind);
+   const unacked = !!(settings?.updateCheck && !settings.updateNoticeAck);
++  const menuExtension = mainMenuPage(enabledExtensions(compiledExtensions, settings?.extensions));
++  const menuActive = menuExtension && path.replace(/\/+$/, '') === `/ext/${menuExtension.name}`;
+   return (
+     <ChromeContext.Provider value={setChrome}>
+       <header className="topbar">
+@@ -297,8 +301,22 @@ export function Layout({ children }: { children: ReactNode }) {
+         <div className={framed ? 'screen framed' : 'screen'}>{children}</div>
+       </main>
+       {showTabs ? (
+-        <nav className="tabbar" aria-label="studio">
+-          {tabs.map((tab) => (
++        <nav className={menuExtension ? 'tabbar has-extension-tab' : 'tabbar'} aria-label="studio">
++          {tabs.flatMap((tab) => [
++            tab.label === 'compose' && menuExtension ? (
++              <Link
++                key={`ext-${menuExtension.name}`}
++                to="/ext/$name"
++                params={{ name: menuExtension.name }}
++                className={menuActive ? 'tab is-active' : 'tab'}
++                aria-current={menuActive ? 'page' : undefined}
++              >
++                <span className="ti" aria-hidden="true">
++                  {menuExtension.page!.mainMenu!.icon}
++                </span>
++                <span className="tl">{menuExtension.page!.title}</span>
++              </Link>
++            ) : null,
+             <Link
+               key={tab.label}
+               to={tab.to}
+@@ -313,8 +331,8 @@ export function Layout({ children }: { children: ReactNode }) {
+               {tab.label === 'more' && (behind || unacked) ? (
+                 <span className="flag" aria-hidden="true" />
+               ) : null}
+-            </Link>
+-          ))}
++            </Link>,
++          ])}
+         </nav>
+       ) : null}
+     </ChromeContext.Provider>
+diff --git a/src/ui/extension-api.ts b/src/ui/extension-api.ts
+index b68f6c3..8b05354 100644
+--- a/src/ui/extension-api.ts
++++ b/src/ui/extension-api.ts
+@@ -86,5 +86,13 @@ export interface StudioExtension {
+   /** Rows for a reading entry's ⋯ sheet. Called when the sheet opens. */
+   entryActions?: (context: EntryContext) => EntryAction[];
+   /** A page of its own at /studio/ext/<name>, linked from More. */
+-  page?: { title: string; component: ComponentType<{ context: StudioContext }> };
++  page?: {
++    title: string;
++    component: ComponentType<{ context: StudioContext }>;
++    /**
++     * Link it from the main menu instead, above compose, under `title` with this icon.
++     * The menu holds one such entry (see mainMenuPage); any other stays in More.
++     */
++    mainMenu?: { icon: string };
++  };
+ }
+diff --git a/src/ui/extension-page.tsx b/src/ui/extension-page.tsx
+index 8333f8c..08f73a5 100644
+--- a/src/ui/extension-page.tsx
++++ b/src/ui/extension-page.tsx
+@@ -10,16 +10,15 @@ import { compiledExtensions } from '../../build/extensions.ui.ts';
+ import { client } from './data.ts';
+ import { Failure, useChrome, useSettings } from './components.tsx';
+ import type { StudioContext } from './extension-api.ts';
+-import { ExtensionBoundary, enabledExtensions } from './extensions.tsx';
++import { ExtensionBoundary, enabledExtensions, mainMenuPage } from './extensions.tsx';
+ 
+ export function ExtensionPage({ name }: { name: string }) {
+   useChrome({ framed: false });
+   const settings = useSettings();
+   const navigate = useNavigate();
+   const [error, setError] = useState<unknown>();
+-  const extension = enabledExtensions(compiledExtensions, settings?.extensions).find(
+-    (candidate) => candidate.name === name && candidate.page,
+-  );
++  const enabled = enabledExtensions(compiledExtensions, settings?.extensions);
++  const extension = enabled.find((candidate) => candidate.name === name && candidate.page);
+   if (!settings) return <p className="view-sub">Loading…</p>;
+   if (!extension?.page)
+     return (
+@@ -49,9 +48,11 @@ export function ExtensionPage({ name }: { name: string }) {
+   const Page = extension.page.component;
+   return (
+     <>
+-      <Link className="back-link" to="/more">
+-        ← more
+-      </Link>
++      {extension === mainMenuPage(enabled) ? null : (
++        <Link className="back-link" to="/more">
++          ← more
++        </Link>
++      )}
+       <h2 className="view-h">{extension.page.title}</h2>
+       <Failure error={error} />
+       <ExtensionBoundary name={extension.name} slot="page">
+diff --git a/src/ui/extensions.tsx b/src/ui/extensions.tsx
+index 0ca8fa3..b9b0d73 100644
+--- a/src/ui/extensions.tsx
++++ b/src/ui/extensions.tsx
+@@ -24,6 +24,14 @@ export function enabledExtensions(compiled: readonly StudioExtension[], enabled:
+   return compiled.filter((extension) => enabled.includes(extension.name));
+ }
+ 
++/**
++ * The one enabled extension page in the main menu: the first in compiled order that asks.
++ * One, because a phone's tab bar has room for one more tab and no more.
++ */
++export function mainMenuPage(extensions: readonly StudioExtension[]) {
++  return extensions.find((extension) => extension.page?.mainMenu);
++}
++
+ function report(name: string, slot: string, error: unknown) {
+   console.error(`Studio extension "${name}" failed in ${slot}; it is skipped there until the page reloads.`, error);
+ }
+diff --git a/src/ui/more.tsx b/src/ui/more.tsx
+index 8975039..e0a325c 100644
+--- a/src/ui/more.tsx
++++ b/src/ui/more.tsx
+@@ -12,7 +12,7 @@ import {
+ } from './components.tsx';
+ import { CLIENT } from '../client.ts';
+ import { compiledExtensions } from '../../build/extensions.ui.ts';
+-import { enabledExtensions } from './extensions.tsx';
++import { enabledExtensions, mainMenuPage } from './extensions.tsx';
+ 
+ /** The fifth tab: update notices, the less-used screens, the public page, log out. */
+ export function MorePage() {
+@@ -21,8 +21,9 @@ export function MorePage() {
+   const update = useUpdateState();
+   const [error, setError] = useState<unknown>();
+   const publicUrl = new URL(`${mount}/`, location.origin).href;
+-  const pages = enabledExtensions(compiledExtensions, settings?.extensions).filter(
+-    (extension) => extension.page,
++  const enabled = enabledExtensions(compiledExtensions, settings?.extensions);
++  const pages = enabled.filter(
++    (extension) => extension.page && extension !== mainMenuPage(enabled),
+   );
+   return (
+     <>
+diff --git a/src/ui/studio.css b/src/ui/studio.css
+index 351a909..81a1629 100644
+--- a/src/ui/studio.css
++++ b/src/ui/studio.css
+@@ -295,6 +295,11 @@ button.link { background: none; border: none; padding: 0; font: inherit; color:
+ .tab { flex: 1; background: none; border: none; font-size: .7rem; color: var(--ink-soft); text-decoration: none;
+   padding: 9px 4px 8px; display: flex; flex-direction: column; align-items: center; gap: 3px; cursor: pointer; position: relative; min-height: 52px; }
+ .tab .ti { font-size: 19px; line-height: 1; height: 20px; }
++/* Seven tabs on a phone: share the width by label, and clip a long title rather than scroll. */
++@media (max-width: 899.98px) {
++  .tabbar.has-extension-tab .tab { flex: 1 1 auto; min-width: 0; padding-inline: 1px; }
++  .tabbar.has-extension-tab .tl { max-width: 100%; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
++}
+ .tab.is-active { color: var(--pencil); font-weight: 600; }
+ .tab .count { position: absolute; top: 5px; left: 50%; margin-left: 6px; min-width: 16px; height: 16px; background: var(--alert); color: #fff; border-radius: 999px; font-size: .6rem; display: grid; place-items: center; padding: 0 4px; font-weight: 700; }
+ .tab .flag { position: absolute; top: 7px; left: 50%; margin-left: 8px; width: 8px; height: 8px; border-radius: 999px; background: var(--warn); }

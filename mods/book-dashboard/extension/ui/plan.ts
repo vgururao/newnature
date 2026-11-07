@@ -471,7 +471,7 @@ function planMenu(book: Book, first: string, settings?: { authorLinks?: unknown;
 /** Words the author wrote: no nav, markers, generated blocks or link syntax. */
 export function authorWords(text: string) {
   const body = before(before(stripNav(text), GENERATED), NOTES_AT)
-    .replace(/^\[[^\]\n]+\]:\s*#\s*$/gm, ' ')
+    .replace(/^\[[^\]\n]+\]:[ \t]*\S+[ \t]*$/gm, ' ')
     .replace(/!\[\[[^\]\n]*\]\]/g, ' ')
     .replace(new RegExp(`\\[\\[${ID}[ \\t]*\\|([^\\n]*?)\\]\\]`, 'g'), '$1')
     .replace(new RegExp(`\\[\\[${ID}\\]\\]`, 'g'), ' ')

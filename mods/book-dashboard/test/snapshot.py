@@ -102,6 +102,29 @@ def plain_draft(items):
 
 SCENARIOS = {"live": None, "reordered": reordered, "apparatus": apparatus, "bare": bare, "stale_cover": stale_cover,
              "dirty_chapter": dirty_chapter, "plain_draft": plain_draft}
+# The same book once its structure is declared in its Contents, as on a shelf.
+MARKERS = "\n\n" + "\n".join(
+    [f"[book-{r}]: /t/{s[r]}/" for r in ("cover", "title", "references", "index")]
+    + [f"[book-ref {r['id']}]: #" for r in book.get("references", []) if r.get("id")]
+    + [f"[book-term: {t}]: #" for t in book.get("index", {}).get("terms", [])])
+
+
+def with_markers(change):
+    def apply(items):
+        if change:
+            change(items)
+        def marked(text):
+            bottom = "[blykker-nav-bottom]: #"
+            return text.replace(bottom, f"{MARKERS.strip()}\n\n{bottom}") if bottom in text else f"{text.rstrip()}{MARKERS}"
+
+        i = items[s["toc"]]
+        i["contentMd"] = marked(i["contentMd"])
+        if i["published"]:
+            i["published"]["contentMd"] = marked(i["published"]["contentMd"])
+    return apply
+
+
+SCENARIOS |= {f"{name}+markers": with_markers(change) for name, change in list(SCENARIOS.items())}
 out = {"book": {
     "blyg": book["blyg"], "notes": book.get("notes", "chapter"),
     "sections": {k: {"role": v["role"], "title": v["title"], **({"id": v["id"]} if v.get("id") else {})} for k, v in book["sections"].items()},

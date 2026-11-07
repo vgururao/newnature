@@ -1,20 +1,32 @@
 #!/opt/homebrew/bin/python3
-"""Compose the cover: the illustration above a title panel (book-jacket proportions).
+"""Compose a cover: the illustration above a title panel (book-jacket proportions).
 
-  scripts/make_cover.py   -> images/cover/new-nature-cover-web-1600x1850.jpg
+  scripts/make_cover.py [new-nature|the-strange-forest]   (default new-nature)
 
-The source illustration is 1024x768, so this is a web cover only; a print cover
+The sources are too small for print, so these are web covers only; a print cover
 needs a higher-resolution source (see images/index.json).
 """
+import sys
 from pathlib import Path
 from PIL import Image, ImageDraw, ImageFont
 
 HERE = Path(__file__).resolve().parent.parent / "images" / "cover"
-SRC, OUT = HERE / "new-nature-cover-art-1024x768.png", HERE / "new-nature-cover-web-1600x1850.jpg"
 W = 1600
-TITLE, AUTHOR = "New Nature", "VENKATESH RAO"
-SUBTITLE = ["How artificial intelligence and computational", "hardness are rewilding the planet"]
-PANEL, INK, SOFT = (36, 58, 54), (246, 240, 226), (196, 206, 192)
+COVERS = {
+    "new-nature": dict(
+        src="new-nature-cover-art-1024x768.png", out="new-nature-cover-web-1600x1850.jpg", title="New Nature", title_size=168,
+        subtitle=["How artificial intelligence and computational", "hardness are rewilding the planet"],
+        panel=(36, 58, 54), panel_h=650),
+    # No subtitle yet, so a shorter panel. The art is used whole: nothing is cropped.
+    "the-strange-forest": dict(
+        src="the-strange-forest-cover-art-1536x1024.png", out="the-strange-forest-cover-web-1600x1567.jpg", title="The Strange Forest", title_size=150,
+        subtitle=[], panel=(20, 36, 52), panel_h=500),
+}
+c = COVERS[sys.argv[1] if len(sys.argv) > 1 else "new-nature"]
+SRC, OUT = HERE / c["src"], HERE / c["out"]
+TITLE, AUTHOR = c["title"], "VENKATESH RAO"
+SUBTITLE, PANEL = c["subtitle"], c["panel"]
+INK, SOFT = (246, 240, 226), (196, 206, 192)
 IOWAN = "/System/Library/Fonts/Supplemental/Iowan Old Style.ttc"  # faces: 0 Roman, 2 Italic (6 Titling is caps-only)
 
 
@@ -35,13 +47,13 @@ def centred(d, y, text, f, fill, tracking=0):
 
 art = Image.open(SRC).convert("RGB")
 art = art.resize((W, round(art.height * W / art.width)), Image.LANCZOS)
-panel_h = 650
+panel_h = c["panel_h"]
 cover = Image.new("RGB", (W, art.height + panel_h), PANEL)
 cover.paste(art, (0, 0))
 d = ImageDraw.Draw(cover)
 d.line([(0, art.height), (W, art.height)], fill=(200, 184, 150), width=4)
 y = art.height + 90
-centred(d, y, TITLE, font(0, 168), INK); y += 230
+centred(d, y, TITLE, font(0, c["title_size"]), INK); y += 230
 for line in SUBTITLE:
     centred(d, y, line, font(2, 54), SOFT); y += 72
 d.line([(W / 2 - 50, y + 40), (W / 2 + 50, y + 40)], fill=SOFT, width=2)

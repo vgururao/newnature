@@ -83,3 +83,5 @@
 .book-dashboard-report-head .book-dashboard-sub { margin: 0; flex: 1; }
 .book-dashboard-links { display: inline-flex; gap: 0.75rem; margin-left: 0.75rem; font-size: 0.85rem; }
 .book-dashboard-table { margin-top: 1.25rem; }
+.book-dashboard-shelf { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; color: var(--ink-soft); font-size: 0.85rem; }
+.book-dashboard-shelf select { flex: 0 1 auto; min-width: 0; font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--rule-strong); border-radius: 8px; padding: 0.3rem 0.5rem; }
