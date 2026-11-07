@@ -9,7 +9,7 @@ is managed on its own, so its work is logged here too.
 ## Session 3 — 2026-11-06
 
 **Model:** Opus 5.5 · **Time:** 13:40–16:45 PST · **Committed:** yes (newnature, blykker) ·
-**Deployed:** yes: Worker `blyg-newnature` `f783804b` (studio v0.54.1 + `mods/book-dashboard`, rollback `d226d31a`).
+**Deployed:** yes: Worker `blyg-newnature`, finally `648710d2` (studio 0.56.0 + `mods/book-dashboard`, rollback `f783804b`).
 **Published:** nav via sync (References, Contents, Chapter 1, Ooze and Hardness); Venkat's first Dashboard rebuild
 added Pinched vs. Warped. The Strange Forest is **not** published.
 
@@ -44,6 +44,16 @@ Bookshelf dropdown; the front page becomes a standard thread instead.
 **Corrections:** my first #126 report said everything passed before CI had finished. I leaned towards rewriting
 `[[index:]]` and `refyr` in the browser, and the build showed that would leak the markup through the normal Publish
 button; I now recommend studio support for those forms only.
+
+**After the first wrap-up (resumed at Venkat's request):**
+- #125 and #126 conflicts with main resolved, CI green. All four studio PRs are ready and mergeable, so the state above is
+  superseded. Merging is for the studio session (Venkat). #133's and `draftCounter`'s API-surface gates cleared by Venkat.
+- No stray `/*` or `*/` on any of the 18 blyg items, ahead of #131.
+- Upgraded the node to studio **0.56.0**: Worker `648710d2`, rollback `f783804b`, migration `0043` applied (`0042` was
+  already there; Venkat thinks the studio session ran it). Venkat will tell that session not to deploy here; deploys of this
+  node run from newnature sessions. 0.56.0 has none of our PRs, so `/* ... */` still publishes and the menu patch stays.
+  Full Playwright wasn't run, and two-book isolation wasn't re-tested at 0.56 (it passed at 0.54.1).
+- Seen, left to Venkat: `#Chapter: Pinched vs. Warped` lacks the space after `#`, so it has no heading.
 
 **Open:** see `status.md`.
 
