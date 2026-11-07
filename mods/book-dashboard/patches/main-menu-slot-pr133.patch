@@ -1,6 +1,6 @@
 TEMPORARY. Remove when this node upgrades to a studio release that has page.mainMenu.
 Source: the src/ui parts of blygger/blygger-studio PR #133 (feat/ext-page-main-menu), as of 2026-11-06,
-applied to v0.54.1 so this node's Dashboard can sit above compose before that PR is released.
+so this node's Dashboard can sit above compose before that PR is released. Made against v0.54.1; applies cleanly to v0.56.0.
 Same API as the PR: page: { mainMenu: { icon } }. Applied by install.sh.
 
 diff --git a/src/ui/components.tsx b/src/ui/components.tsx

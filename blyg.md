@@ -45,3 +45,4 @@ blykker never forks the studio. If a blykker mod needs code, it is a studio exte
   or the next sync reverts them.
 - 2026-11-02 — `AI_PROVIDER_KEY` set from `ANTHROPIC_KEY_BLYGS_VENKATESHRAO`. If that key is rotated, re-run
   `npx wrangler secret put AI_PROVIDER_KEY --config wrangler.private.jsonc --env newnature` (studio repo).
+- 2026-11-06 — Upgraded to studio 0.56.0 from a worktree at the tag, with `mods/book-dashboard` vendored (0.56.0 doesn't have `page.mainMenu`, so the temporary patch stays). Migration `0043` applied at the upgrade; `0042` was already applied, by another session. Worker `648710d2-b3b2-4904-9a32-dc45954e0a3e`; rollback `f783804b-5404-4157-a247-a5eebf106814`.
