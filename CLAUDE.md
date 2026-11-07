@@ -22,6 +22,7 @@ Repo: `vgururao/newnature` (private, branch `main`).
 | `DEVLOG.md` | Session log, newest first (covers blykker while it is run from here). |
 | `status.md` | Current state and open items (the Dashboard reads it). |
 | `scripts/` | Project scripts. `set-blyg-secrets.sh` is the one-time secret setup (Rule 1 order). |
+| `mods/` | Custom-install mods for this blyg, prototyped here before going into blykker. `book-dashboard/` is the Studio Dashboard and rebuild; see its README, and deploy with it, or the page is lost. |
 
 Chapters will get their own folder once writing starts; decide the shape then, not now.
 
@@ -52,7 +53,8 @@ blygger-studio for book-like blygs. **This book is its pilot: its first user and
   `--dry-run` first; a real run publishes, so only when Venkat says so).
 - Markers: `[index: term]: #` on its own line after a paragraph marks an index entry (invisible on the site).
   Notes and references are fragments; see PLAN.md.
-- blykker is a mod of the studio, not a client: this blyg stays on stock blygger-studio, with blykker mods compiled in as studio extensions when they exist.
+- blykker is a mod of the studio, not a client: this blyg stays on stock blygger-studio, with blykker mods compiled in as studio extensions. Exception: a Studio-only main-menu patch in `mods/book-dashboard/patches/` (PR #133), which comes out when a release has the slot.
+- **Build process (Venkat, 2026-11-06):** prototype a feature here as a custom-install mod, generalize it into blykker later with instructions, then back-apply it here.
 
 ## Session rituals
 

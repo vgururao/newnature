@@ -255,6 +255,9 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
 
 ## Friction log
 
+- 2026-11-06 — A deploy that doesn't vendor a local mod silently drops it, and `npm run deploy:all` in the studio includes this blyg. Needs a safeguard before anyone relies on the Dashboard.
+- 2026-11-06 — `docs/mods.md` says vendoring works through `extensions.local.json`, but `build-extensions.ts` also needs the name in the committed `extensions/catalog.ts`, so `install.sh` patches the catalog.
+- 2026-11-06 — The Dashboard's "Author words" total includes Cover, Title page and About, which overstates the book's text.
 - 2026-11-04 — **sync would publish unpublished author edits.** Preface had a pending draft paragraph; sync's only change was stripping a trailing space, yet it reports "update + publish", which would make the draft public. *Fixed 2026-11-06:* a section with unpublished edits only gets its working copy updated, and the chain, index, references and notes are built from what readers see. Such a section's published nav stays stale until it is published (see *Rebuild navigation*). Items above marked "Blocked by" are no longer blocked by this.
 
 - 2026-11-02 — Studio has no book navigation, and public pages can't be restyled by config (no custom CSS). Nav is now a `blykker.py sync` job; layout is phase 2 (`blykker/design/book-layout.html`).

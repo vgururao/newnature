@@ -30,7 +30,10 @@ npx wrangler d1 migrations apply DB --remote --config wrangler.private.jsonc --e
 npm run build && npx wrangler deploy --config wrangler.private.jsonc --env newnature
 ```
 
-blykker never forks the studio. If a blykker mod needs code, it is a studio extension compiled into this node through the studio's gitignored `extensions.local.json`.
+> ⚠️ **Since 2026-11-06 these commands, and `npm run deploy:all`, drop the Dashboard and its menu patch from this node.**
+> Deploy through `mods/book-dashboard/README.md` instead. Nothing else is lost if it happens: re-run the README's steps.
+
+blykker never forks the studio. If a blykker mod needs code, it is a studio extension compiled into this node through the studio's gitignored `extensions.local.json`. The one exception today is the temporary menu patch in `mods/book-dashboard/patches/`.
 
 ## Setup state
 

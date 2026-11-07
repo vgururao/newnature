@@ -9,16 +9,19 @@
 ## Outputs
 | Format | Status | Notes |
 |--------|--------|-------|
-| Site   | in-progress | Blyg live at newnature.venkateshrao.com — book scaffold published (vanilla studio, 0.52.0 as of 2026-11-04, + blykker sync) |
+| Site   | in-progress | Blyg live at newnature.venkateshrao.com — studio 0.54.1 + `mods/book-dashboard` (with a temporary main-menu patch, not stock) |
 | Ebook  | not-started | |
 | Print  | not-started | |
 
 ## Active / Open
-- Book dashboard prototype live 2026-11-06 at `/studio/ext/book-dashboard` (`mods/book-dashboard/`, Worker version `d5e93c1e`, studio v0.54.1). Apply untested on the live book. **A deploy that doesn't vendor the mod removes the page**, including `npm run deploy:all` from the studio checkout; see the mod's README.
+- Book dashboard prototype live 2026-11-06 at `/studio/ext/book-dashboard` (`mods/book-dashboard/`, Worker `f783804b`, rollback `d226d31a`, studio v0.54.1). First live rebuild worked. **A deploy that doesn't vendor the mod removes the page and the menu patch**, including `npm run deploy:all` from the studio checkout; see the mod's README.
+- **Waiting on Venkat, The Strange Forest:** approve the cover (`images/cover/the-strange-forest-cover-web-1600x1567.jpg`); publish it (15 permanent feed events, new front page, placeholder pages); retire `blykker.py sync` on this blyg (sync would reset the front page and menus after the change); masthead link name (Bookshelf proposed).
+- **Waiting on Venkat, design:** core support for `[[index:]]` and `refyr` as a narrow exception to "everything in the mod"; where LLM calls for passes and `refyr` run, given browser-only extensions (`blykker-notes.md` → *Design decisions*).
+- **Studio PRs open, none merged:** #125 word count; #126 focus view; #131 comments to self; #133 main-menu entry. Test results for #126, #131 and #133 were still coming in at wrap-up (see each PR description). Don't merge #131 before its privacy suite reports, or #126 before its e2e and CI do. If #133 is rejected, keep the patch and call it permanent here.
 - Sync hazard fixed 2026-11-06: sync no longer publishes a section with unpublished edits. Those sections keep stale published nav until they are published.
 - Word-count extension: live here since studio 0.54.0 (2026-11-05, PR #117). Compiled in through the studio's gitignored `extensions.local.json` and enabled in Settings.
 - Planned in `blykker/PLAN.md`: editions; several books on one blyg (shelf + book projects, hoppers). Decisions recorded there.
-- **Feature to-do** (`blykker-notes.md`): manuscript statistics (word counts in the studio since 0.54.0); editions; several books on one blyg; composition start page; rebuild navigation when Contents change.
+- **Feature to-do and decisions:** `blykker-notes.md`. Built-first item done as a prototype; next by plan: generalize the dashboard, the rich-editor prototype, the references pipeline.
 - Cover art is 1024 px, not print-ready; needs a higher-resolution source for print.
 - Start writing: Preface and Chapter 1 are placeholders. See `AUTHORING.md`.
 

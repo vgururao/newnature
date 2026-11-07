@@ -6,6 +6,49 @@ is managed on its own, so its work is logged here too.
 
 ---
 
+## Session 3 — 2026-11-06
+
+**Model:** Opus 5.5 · **Time:** 13:40–16:45 PST · **Committed:** yes (newnature, blykker) ·
+**Deployed:** yes: Worker `blyg-newnature` `f783804b` (studio v0.54.1 + `mods/book-dashboard`, rollback `d226d31a`).
+**Published:** nav via sync (References, Contents, Chapter 1, Ooze and Hardness); Venkat's first Dashboard rebuild
+added Pinched vs. Warped. The Strange Forest is **not** published.
+
+A writing session with features noted as they came, each triaged at once: simple ones built in the background, the
+rest logged. Then a design interview over the backlog (decisions in `blykker-notes.md` → *Design decisions*).
+
+**Sync hazard fixed** (blykker `4b6d324`): sync no longer publishes a section with unpublished edits, and builds the
+chain, index, references and notes from what readers see. A real sync ran; the Preface draft stayed private.
+
+**Book dashboard prototype** (`mods/book-dashboard/`): a private page at `/studio/ext/book-dashboard`, above compose.
+Status on load ("Rebuild needed: N items"), one rebuild-and-publish button at the top, changes in plain words, a
+report with links. Draft sections republish with new nav and keep the draft private. Sync's logic is ported to
+TypeScript and matches `blykker.py` in 7 scenarios. Venkat ran the first live rebuild; the nav came out right.
+Main-menu position is a temporary patch of PR #133, which breaks "stock studio" until released.
+
+**Studio PRs, none merged:**
+- #125 word count beside the character count (`draftCounter` slot).
+- #126 focus view: typewriter scrolling, top controls, preview tab, faint counts, caret at the end. Local e2e had
+  1 failure in 502 on the prior commit, and CI failed e2e on the commit before that; fixes are in `92e346f`, unconfirmed.
+- #131 comments to self. Conflicts resolved. Privacy suite still running on the pushed commit `8ae02c5`.
+- #133 main-menu entry for extension pages. Marked ready at Venkat's request with most tests unfinished.
+- #126, #131 and #133 were pushed or opened before their tests finished, at Venkat's request. Wrap-up stopped development
+  with runs still underway; results go into each PR description, and failures stay open rather than fixed.
+
+**The Strange Forest:** second book, built and tested locally with the shelf (front-page thread, book identified by its
+Contents, front matter in invisible markers). Cover composed from Venkat's ChatGPT image, credited to him, CC BY 4.0
+(my pick from "creative commons or something"). Publishing means 15 permanent feed events and a new front page.
+
+**Decided:** build process (prototype here as a custom install, generalize into blykker later, back-apply). Dropped: public
+Bookshelf dropdown; the front page becomes a standard thread instead.
+
+**Corrections:** my first #126 report said everything passed before CI had finished. I leaned towards rewriting
+`[[index:]]` and `refyr` in the browser, and the build showed that would leak the markup through the normal Publish
+button; I now recommend studio support for those forms only.
+
+**Open:** see `status.md`.
+
+---
+
 ## Session 2 — 2026-11-04
 
 **Model:** Opus 5.5 · **Time:** 12:31–14:05 PST · **Committed:** yes (newnature, blykker) ·
