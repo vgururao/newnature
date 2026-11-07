@@ -9,16 +9,16 @@
 ## Outputs
 | Format | Status | Notes |
 |--------|--------|-------|
-| Site   | in-progress | Blyg live at newnature.venkateshrao.com — studio 0.54.1 + `mods/book-dashboard` (with a temporary main-menu patch, not stock) |
+| Site   | in-progress | Blyg live at newnature.venkateshrao.com — studio 0.56.0 + `mods/book-dashboard` (with a temporary main-menu patch, not stock) |
 | Ebook  | not-started | |
 | Print  | not-started | |
 
 ## Active / Open
-- Book dashboard prototype live 2026-11-06 at `/studio/ext/book-dashboard` (`mods/book-dashboard/`, Worker `f783804b`, rollback `d226d31a`, studio v0.54.1). First live rebuild worked. **A deploy that doesn't vendor the mod removes the page and the menu patch**, including `npm run deploy:all` from the studio checkout; see the mod's README.
+- Book dashboard prototype live 2026-11-06 at `/studio/ext/book-dashboard` (`mods/book-dashboard/`). First live rebuild worked. **A deploy that doesn't vendor the mod removes the page and the menu patch**, including `npm run deploy:all` from the studio checkout; see the mod's README.
 - **Waiting on Venkat, The Strange Forest:** approve the cover (`images/cover/the-strange-forest-cover-web-1600x1567.jpg`); publish it (15 permanent feed events, new front page, placeholder pages); retire `blykker.py sync` on this blyg (sync would reset the front page and menus after the change); masthead link name (Bookshelf proposed).
 - **Waiting on Venkat, design:** core support for `[[index:]]` and `refyr` as a narrow exception to "everything in the mod"; where LLM calls for passes and `refyr` run, given browser-only extensions (`blykker-notes.md` → *Design decisions*).
 - **Studio PRs open:** the studio session merges them, not this project. All four are ready, mergeable and CI-green: #125 word count, #126 focus view, #131 comments to self, #133 main-menu entry (no stray `/*` on the blyg; API-surface gates cleared by Venkat). Open small choices: fragment tint in the focus view (#126), word count in quick edit (#125). If #133 is rejected, keep the patch and call it permanent here.
-- **Studio upgrade paused:** Venkat is waiting for 0.56. Resume from the mod's README against that tag and rerun its checks. Live is 0.54.1, Worker `f783804b`, with migration `0042_contacts` already applied (probably by the studio session, Venkat thinks; harmless). If `deploy:all` still lists this node, it should come out of the studio's `deploy-targets.json`.
+- **Studio 0.56.0 live** (2026-11-06): Worker `648710d2`, rollback `f783804b`; migration `0043` applied. It contains none of #125, #126, #131 or #133, so **`/* ... */` still publishes as ordinary text here** and the menu patch stays. If `deploy:all` still lists this node, it should come out of the studio's `deploy-targets.json`.
 - Sync hazard fixed 2026-11-06: sync no longer publishes a section with unpublished edits. Those sections keep stale published nav until they are published.
 - Word-count extension: live here since studio 0.54.0 (2026-11-05, PR #117). Compiled in through the studio's gitignored `extensions.local.json` and enabled in Settings.
 - Planned in `blykker/PLAN.md`: editions; several books on one blyg (shelf + book projects, hoppers). Decisions recorded there.
