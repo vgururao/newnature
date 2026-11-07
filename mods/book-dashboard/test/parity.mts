@@ -6,7 +6,7 @@ import { resolve } from 'node:path';
 import { pathToFileURL } from 'node:url';
 
 const planPath = process.argv[3] ?? resolve(import.meta.dirname, '../extension/ui/plan.ts');
-const { buildPlan, spliceBlock } = (await import(pathToFileURL(planPath).href)) as typeof import('../extension/ui/plan.ts');
+const { buildPlan, outstanding, statusLine, spliceBlock } = (await import(pathToFileURL(planPath).href)) as typeof import('../extension/ui/plan.ts');
 const snapshot = JSON.parse(readFileSync(process.argv[2], 'utf8'));
 
 let failures = 0;
@@ -52,6 +52,15 @@ for (const [name, s] of Object.entries<any>(snapshot.scenarios)) {
     if (p.newPublic?.includes('SECRET') || (p.action === 'publish' && p.newWorking.includes('SECRET'))) fail(name, `${p.title}: draft text would be public`);
   }
   if (JSON.stringify(plan).includes('SECRET') && !plan.sections.every((p: any) => !p.newPublic?.includes('SECRET'))) fail(name, 'SECRET in public plan');
+  // The indicator: everything blykker would write is flagged, and a clean book says so.
+  const flagged = new Set(outstanding(plan).pending.map((p: any) => p.id));
+  for (const id of Object.keys(s.writes)) if (!flagged.has(id)) fail(name, `${id}: blykker writes it, the indicator doesn't flag it`);
+  for (const id of flagged) {
+    const item = items.get(id);
+    if (!s.writes[id] && !(item.dirty && item.status === 'public')) fail(name, `${id}: flagged, but blykker has nothing to do`);
+  }
+  if (!flagged.size && !plan.menu && !statusLine(plan).startsWith('Up to date')) fail(name, 'clean plan not reported up to date');
+  if (flagged.size && statusLine(plan).startsWith('Up to date')) fail(name, 'pending plan reported up to date');
   const planned = plan.sections.map((p: any) => `${p.title}:${p.action}`).join(', ') || 'nothing';
   console.log(`${name}: ${compared}/${Object.keys(s.writes).length} match; plan: ${planned}`);
   if (plan.warnings.length) console.log(`  warnings: ${plan.warnings.join('; ')}`);

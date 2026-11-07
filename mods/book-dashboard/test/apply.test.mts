@@ -204,7 +204,7 @@ await test('edit between preview and apply: stops, nothing changed', async () =>
   const version = item.version;
   const out = await applyPlan(s.plan, real, store, () => {});
   const failing = out.find((o: any) => !o.ok);
-  assert.match(failing.message, /changed since the preview/);
+  assert.match(failing.message, /changed since the last check/);
   assert.equal(out.at(-1), failing, 'should stop at the failure');
   const now = await real.get(s.ch1);
   assert.equal(now.contentMd, newer);
@@ -261,6 +261,57 @@ await test('a generated published version is held, not republished', async () =>
   assert.match(spliceBlock({ stubOf: { id: 'a' }, published: { contentMd: 'x', stubOf: null } } as any), /responds/);
   assert.match(spliceBlock({ media: [{ id: 'm', inline: false }], publishedMedia: [], published: { contentMd: 'x' } } as any), /attachment/);
   assert.equal(spliceBlock({ media: [{ id: 'm', inline: true }], publishedMedia: [], published: { contentMd: 'x' } } as any), null);
+});
+
+await test('the status line and button say what is outstanding', async () => {
+  const { statusLine, actionLabel, outstanding } = await load('plan.ts');
+  const same = { oldWorking: 'a', newWorking: 'a' };
+  const changed = { oldWorking: 'a', newWorking: 'b' };
+  const plan = (sections: any[], menu: unknown = null) => ({ chain: [], sections, menu, warnings: [] });
+  const both = (sections: any[], menu: unknown = null) => [statusLine(plan(sections, menu)), actionLabel(plan(sections, menu))];
+  assert.deepEqual(both([]), ['Up to date', null]);
+  assert.deepEqual(both([{ id: 'a', action: 'publish', ...changed }]), ['Rebuild needed: 1 item', 'Rebuild and publish 1 section']);
+  assert.deepEqual(both([{ id: 'a', action: 'publish', ...changed }, { id: 'b', action: 'splice', ...same }]), ['Rebuild needed: 2 items', 'Rebuild and publish 2 sections']);
+  assert.deepEqual(both([], {}), ['Rebuild needed: 1 item', 'Update and publish the menu']);
+  assert.deepEqual(both([{ id: 'a', action: 'publish', ...changed }], {}), ['Rebuild needed: 2 items', 'Rebuild and publish 1 section and the menu']);
+  assert.deepEqual(both([{ id: 'a', action: 'draft', ...changed }], {}), ['Rebuild needed: 2 items', 'Update 1 draft, and publish the menu']);
+  assert.deepEqual(both([{ id: 'a', action: 'draft', ...changed }]), ['Rebuild needed: 1 item', 'Update 1 draft (nothing gets published)']);
+  assert.deepEqual(both([{ id: 'a', action: 'publish', ...changed }, { id: 'b', action: 'held', ...changed }]), ['Rebuild needed: 2 items', 'Rebuild and publish 1 section, and update 1 draft']);
+  assert.deepEqual(both([{ id: 'a', action: 'held', ...changed }]), ['Rebuild needed: 1 item', 'Update 1 draft (nothing gets published)']);
+  // Rebuilding can't settle a held section with nothing left to write, so it isn't reported as due.
+  const held = { id: 'a', action: 'held', ...same };
+  assert.deepEqual(both([held]), ['Up to date, except 1 section held until published', null]);
+  assert.equal(outstanding(plan([held])).pending.length, 0);
+});
+
+await test('changes are described in plain words, without raw links', async () => {
+  const { describeChange } = await load('plan.ts');
+  const A = 'a'.repeat(26), B = 'b'.repeat(26), C = 'c'.repeat(26), T = 'd'.repeat(26);
+  const nav = (prev: string, next: string) => {
+    const line = `[[${A} | ← ${prev}]] · [[${T} | Contents]] · [[${B} | ${next} →]]`;
+    return (body: string) => `# Title\n\n${line}\n\n[blykker-nav-top]: #\n\n${body}\n\n[blykker-nav-bottom]: #\n\n${line}`;
+  };
+  const say = (old: string, now: string, extra: any = {}) => describeChange({ id: 'x', title: 'Index', action: 'publish', revision: 1, oldWorking: old, newWorking: now, ...extra }, new Map([[C, 'Chapter 2']]));
+  assert.deepEqual(say(nav('One', 'Two')('Body.'), nav('One', 'Pinched vs. Warped')('Body.')).changes, ['Next link → Pinched vs. Warped']);
+  assert.deepEqual(say(nav('One', 'Two')('Body.'), nav('Zero', 'Two')('Body.')).changes, ['Previous link → Zero']);
+  assert.deepEqual(say('# Title\n\nBody.', nav('One', 'Two')('Body.')).changes, ['Gets navigation for the first time']);
+  const index = (terms: string[]) => nav('One', 'Two')(`# Index\n\n[blykker-generated]: #\n\n${terms.map((t) => `- **${t}** — [[${A} | One]]`).join('\n')}`);
+  assert.deepEqual(say(index(['a']), index(['a', 'b', 'c'])).changes, ['Index: 2 entries added']);
+  assert.deepEqual(say(index(['a', 'b']), index(['a'])).changes, ['Index: 1 entry removed']);
+  const refs = (ids: string[]) => `# R\n\n[blykker-generated]: #\n\n${ids.map((i) => `![[${i}]]`).join('\n\n')}`;
+  assert.deepEqual(say(refs([A]), refs([A, B])).changes, ['Index: 1 entry added']);
+  const navRefs = (prev: string) => `# R\n\n[[${A} | ← ${prev}]]\n\n[blykker-nav-top]: #\n\n[blykker-generated]: #\n\n![[${A}]]\n\n[blykker-nav-bottom]: #\n\n[[${A} | ← ${prev}]]`;
+  assert.deepEqual(say(navRefs('One'), navRefs('Two')).changes, ['Previous link → Two']);
+  assert.deepEqual(say(`[[${A} | Start reading →]]`, `[[${C} | Start reading →]]`).changes, ['“Start reading” link → Chapter 2']);
+  assert.deepEqual(say(`Text.[[${A} | 2]]`, `Text.[[${A} | 1]]`).changes, ['Note numbers or link labels updated']);
+  assert.deepEqual(say('Body.  \n\n\n', 'Body.').changes, ['Whitespace tidied']);
+  // Readers' side first; the draft's own text never appears in a description.
+  const draft = say(`DRAFT ${nav('One', 'Two')('Body.')}`, `DRAFT ${nav('One', 'Three')('Body.')}`, { action: 'splice', oldPublic: nav('One', 'Two')('Body.'), newPublic: nav('One', 'Three')('Body.') });
+  assert.deepEqual(draft.changes, ['Next link → Three']);
+  assert.match(draft.note, /stays private/);
+  assert.match(say('a', 'b', { action: 'draft' }).note, /nothing is published/);
+  assert.match(say('a', 'a', { action: 'held', reason: 'because' }).note, /held: because/);
+  for (const line of say(nav('One', 'Two')('Body.'), index(['a'])).changes) assert.ok(!line.includes('[['), line);
 });
 
 await test('logged out: every read and write the dashboard uses is refused', async () => {

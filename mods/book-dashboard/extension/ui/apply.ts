@@ -45,7 +45,7 @@ class Stale extends Error {}
 
 async function fresh(ops: Ops, section: SectionPlan) {
   const item = await ops.get(section.id);
-  if (item.revision !== section.revision) throw new Stale(`${section.title} changed since the preview`);
+  if (item.revision !== section.revision) throw new Stale(`${section.title} changed since the last check`);
   return item;
 }
 
@@ -113,7 +113,10 @@ async function plainSection(ops: Ops, section: SectionPlan, note: string): Promi
     await ops.publish(section.id, note, revision);
     return { ...base, ok: true, message: 'published' };
   }
-  if (section.action === 'held') return { ...base, ok: true, message: `draft updated, published version held: ${section.reason}` };
+  if (section.action === 'held') {
+    const draft = section.newWorking !== section.oldWorking ? 'draft updated, ' : '';
+    return { ...base, ok: true, message: `${draft}published version held: ${section.reason}` };
+  }
   return { ...base, ok: true, message: 'draft updated' };
 }
 
@@ -131,8 +134,8 @@ export async function applyPlan(plan: Plan, ops: Ops, store: RecoveryStore, prog
       outcome = section.action === 'splice' ? await spliceSection(ops, store, section, note) : await plainSection(ops, section, note);
     } catch (e) {
       const message = e instanceof Stale
-        ? `Stopped: ${e.message}. Nothing was changed in it. Preview again.`
-        : `Stopped at ${section.title}: ${describe(e)}. Preview again to see where things stand.`;
+        ? `Stopped: ${e.message}. Nothing was changed in it. Check again before rebuilding.`
+        : `Stopped at ${section.title}: ${describe(e)}. Check again to see where things stand.`;
       outcome = { id: section.id, title: section.title, ok: false, message };
     }
     if (!done(outcome)) return outcomes;

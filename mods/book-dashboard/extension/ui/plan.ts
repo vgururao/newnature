@@ -204,6 +204,128 @@ export interface Plan {
   warnings: string[];
 }
 
+/** What the plan says is outstanding. A held section with nothing to write isn't: only publishing it can settle it. */
+export function outstanding(plan: Plan) {
+  return {
+    pending: plan.sections.filter((s) => s.action !== 'held' || s.newWorking !== s.oldWorking),
+    held: plan.sections.filter((s) => s.action === 'held'),
+    menu: !!plan.menu,
+  };
+}
+
+/** The plain sentence for the top of the dashboard. */
+export function statusLine(plan: Plan) {
+  const { pending, held, menu } = outstanding(plan);
+  const n = pending.length + (menu ? 1 : 0);
+  if (n) return `Rebuild needed: ${n} item${n === 1 ? '' : 's'}`;
+  return held.length ? `Up to date, except ${held.length} section${held.length === 1 ? '' : 's'} held until published` : 'Up to date';
+}
+
+const count = (n: number, one: string, many = `${one}s`) => `${n} ${n === 1 ? one : many}`;
+
+/** What the rebuild button says it will do; null when there's nothing it can do. */
+export function actionLabel(plan: Plan) {
+  const { pending, menu } = outstanding(plan);
+  const publishes = pending.filter((s) => s.action === 'publish' || s.action === 'splice').length;
+  const drafts = pending.length - publishes;
+  if (publishes) return `Rebuild and publish ${count(publishes, 'section')}${menu ? ' and the menu' : ''}${drafts ? `, and update ${count(drafts, 'draft')}` : ''}`;
+  if (drafts && menu) return `Update ${count(drafts, 'draft')}, and publish the menu`;
+  if (drafts) return `Update ${count(drafts, 'draft')} (nothing gets published)`;
+  return menu ? 'Update and publish the menu' : null;
+}
+
+const navLinks = (text: string) => {
+  const at = text.indexOf(NAV_TOP);
+  if (at < 0) return null;
+  const line = text.slice(0, at).split('\n').reverse().find((l) => NAV_LINE.test(l.trim()));
+  const labels = line ? [...line.matchAll(link())].map((m) => (m[2] ?? '').trim()) : [];
+  return {
+    prev: labels.find((l) => l.startsWith('← '))?.slice(2) ?? null,
+    next: labels.find((l) => l.endsWith(' →'))?.slice(0, -2) ?? null,
+    contents: labels.some((l) => !l.startsWith('← ') && !l.endsWith(' →')),
+  };
+};
+
+const after = (text: string, mark: string) => {
+  const at = text.indexOf(mark);
+  return at < 0 ? '' : text.slice(at + mark.length);
+};
+const authorPart = (text: string) => settled(before(before(stripNav(text), GENERATED), NOTES_AT));
+const entries = (body: string) => new Map(
+  body.split('\n').filter((l) => l.startsWith('- ')).map((l) => {
+    const at = l.indexOf(' — ');
+    return [at < 0 ? l : l.slice(0, at), at < 0 ? '' : l.slice(at)] as [string, string];
+  }),
+);
+const directives = (body: string) => [...body.matchAll(directive())].map((m) => m[1]);
+
+function tally(title: string, added: number, removed: number) {
+  return [
+    ...(added ? [`${title}: ${count(added, 'entry', 'entries')} added`] : []),
+    ...(removed ? [`${title}: ${count(removed, 'entry', 'entries')} removed`] : []),
+  ];
+}
+
+/** What a rebuild does to one section, in words. Describes what readers get where that differs from the draft. */
+export function describeChange(section: SectionPlan, titles: Map<string, string>) {
+  const oldText = section.oldPublic ?? section.oldWorking;
+  const newText = section.newPublic ?? section.newWorking;
+  const changes: string[] = [];
+
+  const oldNav = navLinks(oldText);
+  const newNav = navLinks(newText);
+  if (newNav && !oldNav) changes.push('Gets navigation for the first time');
+  else if (oldNav && !newNav) changes.push('Navigation removed');
+  else if (oldNav && newNav) {
+    if (oldNav.prev !== newNav.prev) changes.push(newNav.prev ? `Previous link → ${newNav.prev}` : 'Previous link removed');
+    if (oldNav.next !== newNav.next) changes.push(newNav.next ? `Next link → ${newNav.next}` : 'Next link removed');
+    if (oldNav.contents !== newNav.contents) changes.push(newNav.contents ? 'Contents link added' : 'Contents link removed');
+  }
+
+  const startOf = (text: string) => [...text.matchAll(START)][0]?.[1];
+  const startChanged = startOf(oldText) !== startOf(newText);
+  if (startChanged && startOf(newText)) changes.push(`“Start reading” link → ${titles.get(startOf(newText)!) ?? startOf(newText)}`);
+
+  const oldBody = after(stripNav(oldText), GENERATED);
+  const newBody = after(stripNav(newText), GENERATED);
+  if (oldBody.trim() !== newBody.trim()) {
+    const was = entries(oldBody);
+    const now = entries(newBody);
+    if (was.size || now.size) {
+      changes.push(...tally(section.title, [...now.keys()].filter((k) => !was.has(k)).length, [...was.keys()].filter((k) => !now.has(k)).length));
+      const moved = [...now].filter(([k, v]) => was.has(k) && was.get(k) !== v).length;
+      if (moved) changes.push(`${section.title}: ${count(moved, 'entry', 'entries')} with changed locations`);
+    } else {
+      const was2 = directives(oldBody);
+      const now2 = directives(newBody);
+      const lines = tally(section.title, now2.filter((k) => !was2.includes(k)).length, was2.filter((k) => !now2.includes(k)).length);
+      changes.push(...(lines.length ? lines : [`${section.title}: order or generated text changed`]));
+    }
+  }
+
+  const oldNotes = directives(after(stripNav(oldText), NOTES_AT));
+  const newNotes = directives(after(stripNav(newText), NOTES_AT));
+  const notesAdded = newNotes.filter((k) => !oldNotes.includes(k)).length;
+  const notesRemoved = oldNotes.filter((k) => !newNotes.includes(k)).length;
+  if (notesAdded) changes.push(`Notes: ${count(notesAdded, 'note')} added`);
+  if (notesRemoved) changes.push(`Notes: ${count(notesRemoved, 'note')} removed`);
+
+  const oldMain = authorPart(oldText);
+  const newMain = authorPart(newText);
+  if (oldMain !== newMain) {
+    const bare = (text: string) => text.replace(link(), '[[]]');
+    if (bare(oldMain) !== bare(newMain)) changes.push('Other generated text changed');
+    else if (!startChanged) changes.push('Note numbers or link labels updated');
+  }
+  if (!changes.length) changes.push(settled(oldText) === settled(newText) ? 'Whitespace tidied' : 'Generated text changed');
+
+  const note = section.action === 'splice' ? 'Your unpublished draft stays private, and gets the same navigation.'
+    : section.action === 'draft' ? 'Draft only: nothing is published.'
+    : section.action === 'held' ? `Published version held: ${section.reason}. Readers get these changes when you publish this section.`
+    : null;
+  return { changes, note };
+}
+
 /** What would reach readers if published text were republished, other than the text. Null when nothing would. */
 export function spliceBlock(item: ItemLike) {
   const published = item.published!;

@@ -1,12 +1,31 @@
 # book-dashboard
 
-New Nature's private project page, and the prototype for the same thing in blykker: the book's sections
-with word counts and state, plus a Rebuild that ports `blykker.py sync` to the browser. New Nature only
-for now. Book config is generated from `book.json`; nothing is generalized yet.
+New Nature's private project page, and the prototype for the same thing in blykker. New Nature only for
+now. Book config is generated from `book.json`; nothing is generalized yet.
 
 It's a browser-only Studio extension at `/studio/ext/book-dashboard`, linked from More and from the
 Contents entry in the Studio's reading view. Everything goes through the owner's session, so it adds
 no server routes, and public pages and feeds are unaffected.
+
+## What the page shows
+
+From the top:
+
+1. **Status:** "Rebuild needed: N items" or "Up to date", with a small Check again. The plan runs when the
+   page loads and when its tab regains focus, and only reads. If it can't run, the page shows an error,
+   never "Up to date". A held section with nothing left to write isn't counted, since only publishing it can
+   settle it.
+2. **The button**, only when there's something to do. It says what it will do: "Rebuild and publish 3
+   sections", or "Update 1 draft (nothing gets published)". It's a port of `blykker.py sync`. It re-reads
+   each section first, and stops if one changed since the plan.
+3. **Pending changes** in plain words ("Next link → Pinched vs. Warped", "Index: 2 entries added"), noting
+   where a draft stays private, with the raw diff behind a disclosure.
+4. **The last rebuild's report:** what changed in each section, with a link to its public page and its editor,
+   and any section held and why. It stays until dismissed or replaced, in this browser only.
+5. **The sections:** Contents order, state, word counts (author text only), and which need a rebuild.
+
+The links to the page don't show the status: a link would have to read every section on each Studio page
+load, and an extension can't change core labels such as the one under More.
 
 ## Files
 
