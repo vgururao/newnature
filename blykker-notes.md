@@ -169,6 +169,8 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
   (2026-11-09) without the interim patch.
 - [ ] **Dashboard at the top of the menu** (2026-11-09). Above reading, not just above compose. Needs menu
   zones in the studio (see *Menu zones* under Design decisions); then the Dashboard asks for `zone: 'top'`.
+  *PR open 2026-11-09:* https://github.com/blygger/blygger-studio/pull/143 (not merged). The owner override
+  is not in it (it changes the `/api` settings contract, so API-surface review first).
 - [ ] **Bookshelf dropdown and book metastructure** (2026-11-06). A dropdown on the dashboard to select the
   book being worked on, perhaps with a second book started to test the mechanism.
   *Today:* the node has no book object. A book is defined by `book.json` in this repo: sections by role and id,
