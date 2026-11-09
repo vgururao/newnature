@@ -169,8 +169,7 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
   (2026-11-09) without the interim patch.
 - [ ] **Dashboard at the top of the menu** (2026-11-09). Above reading, not just above compose. Needs menu
   zones in the studio (see *Menu zones* under Design decisions); then the Dashboard asks for `zone: 'top'`.
-  *PR open 2026-11-09:* https://github.com/blygger/blygger-studio/pull/143 (not merged). The owner override
-  is not in it (it changes the `/api` settings contract, so API-surface review first).
+  *PR open 2026-11-09:* https://github.com/blygger/blygger-studio/pull/143 (not merged).
 - [ ] **Bookshelf dropdown and book metastructure** (2026-11-06). A dropdown on the dashboard to select the
   book being worked on, perhaps with a second book started to test the mechanism.
   *Today:* the node has no book object. A book is defined by `book.json` in this repo: sections by role and id,
@@ -263,18 +262,18 @@ studio decides.** What an extension asks for may not be what it gets.
 
 - **Three zones:** `top` (above the default icons, before reading), `visible` (among the default icons, at a
   spot the studio picks), `hidden` (under More, the default for every extension page).
-- **The request:** `page.mainMenu: { icon, zone?, reason? }`. `reason` is a short sentence for the owner,
-  shown in Settings and never parsed. A `{ icon }` with no zone means `visible`, so #133 users keep today's spot.
+- **The request:** `page.mainMenu: { icon, zone? }`. A `{ icon }` with no zone means `visible`, so #133 users
+  keep today's spot.
 - **Granting:** an extension gets its zone or a lower one, never a higher one. A full zone demotes it to the
   next one down, ending in `hidden`, so nothing is lost. Studio caps: top = 1, visible = 1 (the phone tab bar
   has no room for more); the caps are constants and can grow.
-- **Contention:** the owner's order in Settings first, then compiled order. Never load order.
-- **Owner override:** Settings → extensions shows each request, its reason and the zone granted. The owner can
-  put any extension in any zone, past the caps: the caps limit what extensions claim, not what the owner chooses.
-  The owner picks zone and order among extensions; the studio still places them among its own icons.
+- **Contention:** compiled order. Never load order.
+- **Kept minimal (Venkat, 2026-11-09):** the PR has only what blykker and other competing extensions need. An
+  owner override (seeing the requests in Settings, moving any extension to any zone) is suggested as a possible
+  future feature that the studio may choose to build, not specified by us.
 - **Feedback:** the page context carries the granted zone, so an extension that was demoted can adapt.
 - Browser-only; an extension API addition, so API-surface review as #133 had. No protocol or wire change.
-- **New Nature:** the Dashboard asks for `zone: 'top'`, reason "the book's home: status and rebuild".
+- **New Nature:** the Dashboard asks for `zone: 'top'`.
 
 ## Friction log
 
