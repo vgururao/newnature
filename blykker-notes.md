@@ -279,7 +279,8 @@ studio decides.** What an extension asks for may not be what it gets.
 
 - **A narrow studio slot, not an editor replacement** (Venkat). The editor's tools (pickers, format shortcuts,
   paste/upload, toolbar selection actions, focus view) are built on the native textarea, so a CodeMirror swap
-  is a large refactor; it stays a later, separate question. This revises *Rich editor* above: the "small slot
+  is a large refactor; it stays a later, separate question. *PR open 2026-11-09:*
+  https://github.com/blygger/blygger-studio/pull/144 (not merged). This revises *Rich editor* above: the "small slot
   letting an extension replace the text area" isn't small.
 - **`editorRegions`:** an extension returns ranges of the full text to hold out of the editor's textarea. The
   textarea shows the rest; each edit is rejoined into the full text before autosave, so preview, publish,

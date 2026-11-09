@@ -6,6 +6,41 @@ is managed on its own, so its work is logged here too.
 
 ---
 
+## Session 4 — 2026-11-09
+
+**Model:** Opus 5.5 · **Time:** ~08:00–09:50 PST · **Committed:** yes (newnature; studio branches for PRs) ·
+**Deployed:** yes: Worker `blyg-newnature` `fca06ebd` (studio 0.58.1 + `mods/book-dashboard`, rollback `648710d2`).
+**Published:** nothing. No sync or rebuild ran.
+
+**Upgrade to studio 0.58.1.** It has all four of this project's PRs (#125, #126, #131, #133) and the 0.58.1
+follow-ups. Migration `0045` applied. The Dashboard's menu patch is retired: the mod already used the released
+`page.mainMenu` API, so this node is stock studio plus mods again. Verified: generator 0.58.1, all sections 200,
+sync dry-run clean, Dashboard above compose in a headless logged-in screenshot.
+
+**Studio PR #143, menu zones** (ready, CI green, not merged). An extension page asks for `top`, `visible` or `hidden`,
+and the studio decides: a zone or a lower one, never higher, ties by compiled order; the page is told where it
+landed. Venkat named the zones and ruled it minimal: `reason`, the Settings display and any owner override were cut,
+with the override suggested as a possible studio feature, not specified by us.
+
+**Studio PR #144, editor regions** (ready, not merged; CI pending at wrap-up; locally 2319 Worker, 245 UI and 337 editor e2e tests pass). Decided with Venkat: a
+narrow `editorRegions` slot, not an editor replacement (the editor's tools all depend on the native textarea). It
+holds ranges of the full text out of the text box; edits are rejoined before autosave, so the draft, preview and
+publish keep the whole text. Hidden each time the editor opens; read-only when shown. Found while testing: after
+select-all and type, a common-suffix diff kept the old final "." and put it after the nav marker (`[blykker-nav-top]: #.`);
+fixed by passing the text box's caret to the diff. Template `regions-example`.
+
+**Noticed:** five threads from 2026-11-07 aren't in the Contents chain, so the Dashboard says "Up to date" and a
+rebuild won't give them nav. If they are new chapters, they go in the Contents thread first.
+
+**Decisions:** menu zones top/visible/hidden, extension asks and studio decides; studio PRs stay minimal to what
+blykker needs (owner-facing features are the studio's call); nav hiding by `editorRegions`, read-only when shown,
+reset each time. All in `blykker-notes.md`.
+
+**State after:** blyg on 0.58.1 with the Dashboard, no patches. #143 open and green, #144 open with CI pending;
+nothing merged. After release: Dashboard `zone: 'top'`, and a blykker `editorRegions` for the two nav blocks.
+
+---
+
 ## Session 3 — 2026-11-06
 
 **Model:** Opus 5.5 · **Time:** 13:40–16:45 PST · **Committed:** yes (newnature, blykker) ·
