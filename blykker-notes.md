@@ -275,6 +275,20 @@ studio decides.** What an extension asks for may not be what it gets.
 - Browser-only; an extension API addition, so API-surface review as #133 had. No protocol or wire change.
 - **New Nature:** the Dashboard asks for `zone: 'top'`.
 
+## Design decisions: hiding nav in the editor (2026-11-09)
+
+- **A narrow studio slot, not an editor replacement** (Venkat). The editor's tools (pickers, format shortcuts,
+  paste/upload, toolbar selection actions, focus view) are built on the native textarea, so a CodeMirror swap
+  is a large refactor; it stays a later, separate question. This revises *Rich editor* above: the "small slot
+  letting an extension replace the text area" isn't small.
+- **`editorRegions`:** an extension returns ranges of the full text to hold out of the editor's textarea. The
+  textarea shows the rest; each edit is rejoined into the full text before autosave, so preview, publish,
+  counts and the server never change. Anchors shift with each (contiguous) textarea change. If a rejoin
+  doesn't round-trip, the editor drops the regions and shows the full text, never saving a mangled version.
+- **Shown = read-only** (Venkat): an edit touching a region is refused with a toast; sync owns those lines.
+- **Hidden every time the editor opens** (Venkat); "show" is not remembered.
+- Full editor only. Dimming index markup is not possible in a textarea; it stays with the rich editor.
+
 ## Friction log
 
 - 2026-11-06 — A deploy that doesn't vendor a local mod silently drops it, and `npm run deploy:all` in the studio includes this blyg. Needs a safeguard before anyone relies on the Dashboard.
