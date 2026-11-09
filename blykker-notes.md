@@ -164,10 +164,11 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
   alternative references. Probably on the book dashboard.
 - [ ] **Bibliography cleanup pass** (2026-11-06). A separate pass action that turns the simple references
   `refyr` creates into full bibliographic entries.
-- [ ] **Dashboard in the main menu** (2026-11-06). High in the Studio's main menu, above compose, called
-  Dashboard, not hidden in More. Extension pages are only linked from More today, so this needs a general
-  studio slot (a PR under `docs/mods.md`). *To decide:* whether to patch the slot into this node's build
-  meanwhile.
+- [x] **Dashboard in the main menu** (2026-11-06). High in the Studio's main menu, above compose, called
+  Dashboard, not hidden in More. *Done:* PR #133 (`page.mainMenu`), released in 0.57.0, live here since 0.58.1
+  (2026-11-09) without the interim patch.
+- [ ] **Dashboard at the top of the menu** (2026-11-09). Above reading, not just above compose. Needs menu
+  zones in the studio (see *Menu zones* under Design decisions); then the Dashboard asks for `zone: 'top'`.
 - [ ] **Bookshelf dropdown and book metastructure** (2026-11-06). A dropdown on the dashboard to select the
   book being worked on, perhaps with a second book started to test the mechanism.
   *Today:* the node has no book object. A book is defined by `book.json` in this repo: sections by role and id,
@@ -252,6 +253,26 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
   the dashboard, and the normal Publish button would leak the literal markup.
 - **Also open:** vendored extensions must be browser-only with read-only server routes, so where do LLM calls
   for passes and `refyr` run, and with whose key?
+
+## Design decisions: menu zones (2026-11-09)
+
+Venkat's ruling: many extensions may compete for visible menu placement, so **an extension makes a case and the
+studio decides.** What an extension asks for may not be what it gets.
+
+- **Three zones:** `top` (above the default icons, before reading), `visible` (among the default icons, at a
+  spot the studio picks), `hidden` (under More, the default for every extension page).
+- **The request:** `page.mainMenu: { icon, zone?, reason? }`. `reason` is a short sentence for the owner,
+  shown in Settings and never parsed. A `{ icon }` with no zone means `visible`, so #133 users keep today's spot.
+- **Granting:** an extension gets its zone or a lower one, never a higher one. A full zone demotes it to the
+  next one down, ending in `hidden`, so nothing is lost. Studio caps: top = 1, visible = 1 (the phone tab bar
+  has no room for more); the caps are constants and can grow.
+- **Contention:** the owner's order in Settings first, then compiled order. Never load order.
+- **Owner override:** Settings → extensions shows each request, its reason and the zone granted. The owner can
+  put any extension in any zone, past the caps: the caps limit what extensions claim, not what the owner chooses.
+  The owner picks zone and order among extensions; the studio still places them among its own icons.
+- **Feedback:** the page context carries the granted zone, so an extension that was demoted can adapt.
+- Browser-only; an extension API addition, so API-surface review as #133 had. No protocol or wire change.
+- **New Nature:** the Dashboard asks for `zone: 'top'`, reason "the book's home: status and rebuild".
 
 ## Friction log
 
