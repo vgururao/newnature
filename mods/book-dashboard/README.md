@@ -27,11 +27,11 @@ From the top:
 The links to the page don't show the status: a link would have to read every section on each Studio page
 load, and an extension can't change core labels such as the one under More.
 
-## The main menu (temporary patch)
+## The main menu
 
-`patches/main-menu-slot-pr133.patch` puts Dashboard in the main menu, above compose, with the design of studio
-PR #133, and `install.sh` applies it. **Remove the patch and its lines in `install.sh` when this node upgrades to
-a release that has `page.mainMenu`.** With that design the link moves from More to the menu.
+The page asks for the main-menu entry with `page.mainMenu` (studio 0.57.0+, PR #133), so Dashboard sits above
+compose instead of under More. The temporary patch that did this before 0.57.0 was removed at the 0.58.1 upgrade
+(2026-11-09).
 
 ## Books on the shelf
 

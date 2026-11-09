@@ -30,11 +30,11 @@ npx wrangler d1 migrations apply DB --remote --config wrangler.private.jsonc --e
 npm run build && npx wrangler deploy --config wrangler.private.jsonc --env newnature
 ```
 
-> ⚠️ **Since 2026-11-06 these commands, and `npm run deploy:all`, drop the Dashboard and its menu patch from this node.**
+> ⚠️ **Since 2026-11-06 these commands, and `npm run deploy:all`, drop the Dashboard from this node.**
 > Deploy through `mods/book-dashboard/README.md` instead. Nothing else is lost if it happens: re-run the README's steps.
 > **Upgrades and deploys of this node run from newnature sessions only** (Venkat, 2026-11-06); the studio session doesn't deploy here.
 
-blykker never forks the studio. If a blykker mod needs code, it is a studio extension compiled into this node through the studio's gitignored `extensions.local.json`. The one exception today is the temporary menu patch in `mods/book-dashboard/patches/`.
+blykker never forks the studio. If a blykker mod needs code, it is a studio extension compiled into this node through the studio's gitignored `extensions.local.json`. No exceptions since 0.58.1 (the menu patch is gone; the Dashboard uses core `page.mainMenu`).
 
 ## Setup state
 
@@ -46,3 +46,4 @@ blykker never forks the studio. If a blykker mod needs code, it is a studio exte
 - 2026-11-02 — `AI_PROVIDER_KEY` set from `ANTHROPIC_KEY_BLYGS_VENKATESHRAO`. If that key is rotated, re-run
   `npx wrangler secret put AI_PROVIDER_KEY --config wrangler.private.jsonc --env newnature` (studio repo).
 - 2026-11-06 — Upgraded to studio 0.56.0 from a worktree at the tag, with `mods/book-dashboard` vendored (0.56.0 doesn't have `page.mainMenu`, so the temporary patch stays). Migration `0043` applied at the upgrade; `0042` was already applied, by another session. Worker `648710d2-b3b2-4904-9a32-dc45954e0a3e`; rollback `f783804b-5404-4157-a247-a5eebf106814`.
+- 2026-11-09 — Upgraded to studio 0.58.1 (brings PRs #125, #126, #131, #133 and the 0.58.1 New Nature follow-ups) from a worktree at the tag, `mods/book-dashboard` vendored with the menu patch removed. Migration `0045` applied (0044 is reserved, not shipped). Worker `fca06ebd-15a6-41e8-bee0-5ec8d606ba60`; rollback `648710d2-b3b2-4904-9a32-dc45954e0a3e`. Verified: generator 0.58.1, all section pages 200, sync dry-run clean, Dashboard in the main menu above compose (headless screenshot).

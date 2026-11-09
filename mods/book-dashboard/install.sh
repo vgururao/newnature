@@ -39,12 +39,5 @@ if '"book-dashboard"' not in text:
 
 (tree / "extensions.local.json").write_text(json.dumps({"compile": ["word-count", "book-dashboard"]}) + "\n", "utf-8")
 PY
-# Temporary: see the head of the patch. Skipped if already applied, and fails loudly if it no longer fits.
-patch=$here/patches/main-menu-slot-pr133.patch
-if git -C "$tree" apply -R --check "$patch" 2>/dev/null; then
-  :
-else
-  git -C "$tree" apply "$patch"
-fi
 
 echo "book-dashboard vendored into $tree"

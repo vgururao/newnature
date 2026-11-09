@@ -53,7 +53,7 @@ blygger-studio for book-like blygs. **This book is its pilot: its first user and
   `--dry-run` first; a real run publishes, so only when Venkat says so).
 - Markers: `[index: term]: #` on its own line after a paragraph marks an index entry (invisible on the site).
   Notes and references are fragments; see PLAN.md.
-- blykker is a mod of the studio, not a client: this blyg stays on stock blygger-studio, with blykker mods compiled in as studio extensions. Exception: a Studio-only main-menu patch in `mods/book-dashboard/patches/` (PR #133), which comes out when a release has the slot.
+- blykker is a mod of the studio, not a client: this blyg stays on stock blygger-studio, with blykker mods compiled in as studio extensions. No patches since 0.58.1: the Dashboard's main-menu entry is core `page.mainMenu` (PR #133).
 - **Build process (Venkat, 2026-11-06):** prototype a feature here as a custom-install mod, generalize it into blykker later with instructions, then back-apply it here.
 
 ## Session rituals
