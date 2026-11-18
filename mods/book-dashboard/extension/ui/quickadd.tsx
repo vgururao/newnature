@@ -1,4 +1,4 @@
-// Quick-add a reference while writing: "+ reference" beside the counts opens a sheet. Paste a URL,
+// Quick-add a reference while writing: "+REF" beside the counts opens a sheet. Paste a URL,
 // DOI or ISBN, or type a rough citation; check the entry; add it (a published [blykker-ref] fragment)
 // and get its citation on the clipboard. Or cite one of the book's references. The References
 // section picks a new one up at the next rebuild.
@@ -165,13 +165,13 @@ function RefSheet({ context, close }: { context: DraftCounterContext; close: () 
   );
 }
 
-/** "+ reference" beside the counts, in the composer and the full editor. */
+/** "+REF" beside the counts, in the composer and the full editor. */
 export function QuickAdd({ context }: { context: DraftCounterContext }) {
   const [open, setOpen] = useState(false);
   return (
     <span data-extension="book-dashboard">
-      {' · '}
-      <button type="button" className="book-dashboard-link" onClick={() => setOpen(true)}>+ reference</button>
+      {' '}
+      <button type="button" className="book-dashboard-refbtn" aria-label="add a reference" title="Add a reference: URL, DOI, ISBN or rough citation" onClick={() => setOpen(true)}>+REF</button>
       {open ? <RefSheet context={context} close={() => setOpen(false)} /> : null}
     </span>
   );

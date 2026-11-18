@@ -86,7 +86,13 @@
 .book-dashboard-shelf { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; color: var(--ink-soft); font-size: 0.85rem; }
 .book-dashboard-shelf select { flex: 0 1 auto; min-width: 0; font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--rule-strong); border-radius: 8px; padding: 0.3rem 0.5rem; }
 
-/* "+ reference" beside the counts, and its sheet (quickadd.tsx). */
+/* "+REF" beside the counts, and its sheet (quickadd.tsx). Boxed like the toolbar's [[ and [TK]. */
+.book-dashboard-refbtn {
+  margin-left: 0.35rem; padding: 0.1rem 0.45rem; border: 1px solid var(--pencil); border-radius: 6px;
+  background: transparent; color: var(--pencil); cursor: pointer;
+  font: 600 0.8rem/1.4 ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: 0.02em; vertical-align: baseline;
+}
+.book-dashboard-refbtn:hover { background: var(--pencil); color: var(--paper, #fff); }
 .book-dashboard-link { background: none; border: 0; padding: 0; color: var(--pencil); font: inherit; text-decoration: underline; cursor: pointer; }
 .book-dashboard-ref { display: grid; gap: 0.6rem; color: var(--ink); font-size: 0.95rem; }
 .book-dashboard-ref input, .book-dashboard-ref textarea {

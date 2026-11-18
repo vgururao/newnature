@@ -43,7 +43,7 @@ show" beside the counts shows them, read-only. `extension/ui/regions.ts` holds t
 
 ## Adding a reference
 
-"+ reference" beside the counts (composer and full editor) opens a sheet. Paste a URL, DOI or ISBN, or type a rough
+**+REF**, a boxed button beside the counts (composer and full editor), opens a sheet. Paste a URL, DOI or ISBN, or type a rough
 citation ("polanyi tacit dimension"). The extension's one server route, `GET /api/ext/book-dashboard/lookup?q=`
 (owner read), finds the source: a page's citation, Open Graph and JSON-LD metadata; Crossref, then DataCite, for a
 DOI; Open Library for an ISBN; Crossref and Open Library searched for a rough citation (pick one of up to six). Only
@@ -71,7 +71,7 @@ now.
 | `extension/ui/plan.ts` | The port: what a rebuild would change. Pure. |
 | `extension/ui/apply.ts` | Applies a plan, including the swap for sections with drafts. |
 | `extension/ui/shelf.ts` | Reads the shelf and each book from their markers. |
-| `extension/ui/quickadd.tsx`, `refs.ts` | "+ reference": the sheet; formatting, labels and matching (pure). |
+| `extension/ui/quickadd.tsx`, `refs.ts` | "+REF": the sheet; formatting, labels and matching (pure). |
 | `extension/lookup.ts`, `server.ts`, `contract.ts` | The lookup route (`lookup.ts` is pure apart from the `fetch` it is given). |
 | `extension/ui/regions.ts` | The nav blocks held out of the full editor (`editorRegions`). Pure. |
 | `extension/ui/index.tsx`, `dashboard.css` | The page. |

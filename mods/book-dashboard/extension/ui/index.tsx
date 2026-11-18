@@ -459,7 +459,7 @@ function Dashboard({ context }: { context: StudioContext }) {
 export const extension: StudioExtension = {
   name: NAME,
   label: 'Dashboard',
-  description: 'New Nature’s private project page: sections, word counts, and the rebuild. Also hides the chapter navigation in the full editor, and adds “+ reference” beside the counts.',
+  description: 'New Nature’s private project page: sections, word counts, and the rebuild. Also hides the chapter navigation in the full editor, and adds “+REF” beside the counts.',
   entryByline: ({ context }) =>
     context.id === TOC && !context.imported ? (
       <a
