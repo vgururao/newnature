@@ -85,3 +85,22 @@
 .book-dashboard-table { margin-top: 1.25rem; }
 .book-dashboard-shelf { display: flex; align-items: center; gap: 0.5rem; margin-bottom: 0.75rem; color: var(--ink-soft); font-size: 0.85rem; }
 .book-dashboard-shelf select { flex: 0 1 auto; min-width: 0; font: inherit; color: var(--ink); background: var(--card); border: 1px solid var(--rule-strong); border-radius: 8px; padding: 0.3rem 0.5rem; }
+
+/* "+ reference" beside the counts, and its sheet (quickadd.tsx). */
+.book-dashboard-link { background: none; border: 0; padding: 0; color: var(--pencil); font: inherit; text-decoration: underline; cursor: pointer; }
+.book-dashboard-ref { display: grid; gap: 0.6rem; color: var(--ink); font-size: 0.95rem; }
+.book-dashboard-ref input, .book-dashboard-ref textarea {
+  width: 100%; box-sizing: border-box; padding: 0.4rem 0.5rem; border: 1px solid var(--rule); border-radius: 6px;
+  background: var(--paper, transparent); color: var(--ink); font: inherit;
+}
+.book-dashboard-ref-row { display: flex; gap: 0.5rem; align-items: center; }
+.book-dashboard-ref-row input { flex: 1; }
+.book-dashboard-ref-note { margin: 0; color: var(--ink-soft); font-size: 0.85rem; }
+.book-dashboard-ref-picks { list-style: none; margin: 0; padding: 0; display: grid; gap: 0.35rem; font-size: 0.88rem; }
+.book-dashboard-ref-picks input { width: auto; }
+.book-dashboard-ref-from { color: var(--ink-soft); font-size: 0.75rem; }
+.book-dashboard-ref-field { display: grid; gap: 0.2rem; color: var(--ink-soft); font-size: 0.8rem; }
+.book-dashboard-ref-cite { font-size: 0.85rem; word-break: break-all; }
+.book-dashboard-ref-book summary { cursor: pointer; color: var(--ink-soft); font-size: 0.85rem; }
+.book-dashboard-ref-book ul { list-style: none; margin: 0.4rem 0 0; padding: 0; display: grid; gap: 0.35rem; font-size: 0.85rem; }
+.book-dashboard-ref-book input { margin-top: 0.4rem; }

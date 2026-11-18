@@ -167,7 +167,7 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
 - [x] **Dashboard in the main menu** (2026-11-06). High in the Studio's main menu, above compose, called
   Dashboard, not hidden in More. *Done:* PR #133 (`page.mainMenu`), released in 0.57.0, live here since 0.58.1
   (2026-11-09) without the interim patch.
-- [ ] **Dashboard at the top of the menu** (2026-11-09). Above reading, not just above compose. Needs menu
+- [x] **Dashboard at the top of the menu** (2026-11-09). Above reading, not just above compose. Needs menu
   zones in the studio (see *Menu zones* under Design decisions); then the Dashboard asks for `zone: 'top'`.
   *PR #143 merged 2026-11-13, released in 0.59.0; Dashboard asks for `top` since 2026-11-18.*
 - [ ] **Bookshelf dropdown and book metastructure** (2026-11-06). A dropdown on the dashboard to select the
@@ -182,6 +182,15 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
   stubs for all the elements New Nature has; Venkat supplies the cover image. The public page gets something
   like a Bookshelf dropdown that loads one book to read; extensions are Studio-only, so that needs a general
   masthead-dropdown setting as a studio PR.
+- [x] **Quick-add a reference while writing** (2026-11-18, Venkat chose this over `refyr`, mining and a management
+  tab as the first improvement). "+ reference" beside the counts: paste a URL, DOI or ISBN, or a rough citation; the
+  entry comes back in the book's style with an "Author Year" label, both editable; duplicates are caught; add publishes
+  the fragment and copies the citation. *Done:* prototype in `mods/book-dashboard` (`quickadd.tsx`, `refs.ts`,
+  server route `lookup.ts`), live 2026-11-18. No LLM. Next: generalize into blykker; feeds the *References pane* and
+  *Mine references* items, which can reuse the lookup route.
+  *Open:* citing inserts by clipboard, since `draftCounter` can't write to the editor (friction log); Open Library
+  search hits have no publisher (an edition's imprint would mismatch the first-publication year), so book entries
+  from a search need the imprint typed; reference fragments still land in the public feed (left for now, Venkat).
 - [ ] **Mine references while writing** (2026-11-06). blykker only. References inserted while writing
   are automatically mined and created as reference fragments. In a later pass, the inline references
   are updated to point to the fragment instead of going directly to the reference.
@@ -293,6 +302,9 @@ studio decides.** What an extension asks for may not be what it gets.
 
 ## Friction log
 
+- 2026-11-18 — A `draftCounter` component can't insert text at the editor's cursor, so "+ reference" copies the
+  citation to the clipboard. If paste proves clumsy, the minimal studio ask is an `insertText` verb on
+  `DraftCounterContext` (joined through editor regions like any edit). Not proposed yet.
 - 2026-11-06 — A deploy that doesn't vendor a local mod silently drops it, and `npm run deploy:all` in the studio includes this blyg. Needs a safeguard before anyone relies on the Dashboard.
 - 2026-11-06 — `docs/mods.md` says vendoring works through `extensions.local.json`, but `build-extensions.ts` also needs the name in the committed `extensions/catalog.ts`, so `install.sh` patches the catalog.
 - 2026-11-06 — The Dashboard's "Author words" total includes Cover, Title page and About, which overstates the book's text.

@@ -3,9 +3,9 @@
 New Nature's private project page, and the prototype for the same thing in blykker. New Nature only for
 now. Book config is generated from `book.json`; nothing is generalized yet.
 
-It's a browser-only Studio extension at `/studio/ext/book-dashboard`, linked from More and from the
-Contents entry in the Studio's reading view. Everything goes through the owner's session, so it adds
-no server routes, and public pages and feeds are unaffected.
+It's a Studio extension at `/studio/ext/book-dashboard`, linked from the top of the main menu and from the
+Contents entry in the Studio's reading view. Everything goes through the owner's session, so its one
+server route is an owner read (reference lookup), and public pages and feeds are unaffected.
 
 ## What the page shows
 
@@ -41,6 +41,21 @@ line and `[blykker-nav-top]: #` under the heading, `[blykker-nav-bottom]: #` and
 out of the full editor's text box. The draft, preview and publish keep the whole text. "chapter navigation hidden ·
 show" beside the counts shows them, read-only. `extension/ui/regions.ts` holds the ranges; it is pure.
 
+## Adding a reference
+
+"+ reference" beside the counts (composer and full editor) opens a sheet. Paste a URL, DOI or ISBN, or type a rough
+citation ("polanyi tacit dimension"). The extension's one server route, `GET /api/ext/book-dashboard/lookup?q=`
+(owner read), finds the source: a page's citation, Open Graph and JSON-LD metadata; Crossref, then DataCite, for a
+DOI; Open Library for an ISBN; Crossref and Open Library searched for a rough citation (pick one of up to six). Only
+public http(s) addresses are fetched.
+
+The sheet writes the entry in the book's style (Chicago, as the first six references were written; five of them come
+back identical from their URLs) and a label ("Polanyi 1966", "LeCun et al. 2015"), both editable. If the book already
+has the source (same DOI, address or title), it says so and offers that one's citation. **Add and publish reference**
+creates the `[blykker-ref]: #` fragment, publishes it (a draft reference would be a dead link for readers; each one is
+a feed item), and copies `[[id | label]]` to the clipboard to paste. The slot can't insert at the cursor. References
+lists it after the next rebuild. The sheet also lists the book's references, filterable, each with **cite**.
+
 ## Books on the shelf
 
 If the front page carries `[blykker-shelf]: #`, the page reads the books from it live, shows a Bookshelf dropdown
@@ -56,6 +71,8 @@ now.
 | `extension/ui/plan.ts` | The port: what a rebuild would change. Pure. |
 | `extension/ui/apply.ts` | Applies a plan, including the swap for sections with drafts. |
 | `extension/ui/shelf.ts` | Reads the shelf and each book from their markers. |
+| `extension/ui/quickadd.tsx`, `refs.ts` | "+ reference": the sheet; formatting, labels and matching (pure). |
+| `extension/lookup.ts`, `server.ts`, `contract.ts` | The lookup route (`lookup.ts` is pure apart from the `fetch` it is given). |
 | `extension/ui/regions.ts` | The nav blocks held out of the full editor (`editorRegions`). Pure. |
 | `extension/ui/index.tsx`, `dashboard.css` | The page. |
 | `install.sh` | Vendors this into a studio tree and generates `book.ts` from `book.json`. |
@@ -104,6 +121,9 @@ node --import tsx <this folder>/test/parity.mts /tmp/snapshot.json $PWD/extensio
 
 # Editor regions: the box shows each section without its nav (texts.json: id → { text }, read-only, holds drafts).
 node --import tsx <this folder>/test/regions.test.mts /tmp/texts.json $PWD/extensions/book-dashboard/ui
+
+# References: formatting and matching; --live also looks up the six hand-written references and compares.
+node --import tsx <this folder>/test/refs.test.mts $PWD/extensions/book-dashboard --live
 
 # Draft safety, against a disposable local studio with OWNER_PASSWORD=test-password and high API limits.
 npx wrangler dev --port 8799 --persist-to /tmp/dash-state

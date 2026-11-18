@@ -9,6 +9,7 @@ import type { StudioContext, StudioExtension } from '../../../src/ui/extension-a
 import { applyPlan, restore, type Ops, type Outcome, type Recovery, type RecoveryStore } from './apply.ts';
 import { BOOK } from './book.ts';
 import { actionLabel, authorWords, buildPlan, changedLines, chainOf, describeChange, liveText, loadItems, outstanding, statusLine, type Book, type ItemLike, type Plan } from './plan.ts';
+import { QuickAdd } from './quickadd.tsx';
 import { navRegions } from './regions.ts';
 import { crossings, isShelf, parseBook, parseShelf, type ShelfBook } from './shelf.ts';
 import './dashboard.css';
@@ -458,7 +459,7 @@ function Dashboard({ context }: { context: StudioContext }) {
 export const extension: StudioExtension = {
   name: NAME,
   label: 'Dashboard',
-  description: 'New Nature’s private project page: sections, word counts, and the rebuild. Also hides the chapter navigation in the full editor.',
+  description: 'New Nature’s private project page: sections, word counts, and the rebuild. Also hides the chapter navigation in the full editor, and adds “+ reference” beside the counts.',
   entryByline: ({ context }) =>
     context.id === TOC && !context.imported ? (
       <a
@@ -472,6 +473,7 @@ export const extension: StudioExtension = {
         · dashboard
       </a>
     ) : null,
+  draftCounter: QuickAdd,
   editorRegions: ({ text }) => navRegions(text),
   page: { title: 'Dashboard', mainMenu: { icon: '⌂', zone: 'top' }, component: Dashboard },
 };

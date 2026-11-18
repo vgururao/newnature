@@ -12,6 +12,7 @@ test -f "$tree/extensions/catalog.ts"
 mkdir -p "$tree/extensions/book-dashboard"
 rm -rf "$tree/extensions/book-dashboard/ui"
 cp -R "$here/extension/ui" "$tree/extensions/book-dashboard/ui"
+cp "$here/extension/contract.ts" "$here/extension/server.ts" "$here/extension/lookup.ts" "$tree/extensions/book-dashboard/"
 
 /opt/homebrew/bin/python3 - "$book" "$tree" <<'PY'
 import json, re, sys
