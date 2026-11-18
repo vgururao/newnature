@@ -186,7 +186,9 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
   tab as the first improvement). "+ reference" beside the counts: paste a URL, DOI or ISBN, or a rough citation; the
   entry comes back in the book's style with an "Author Year" label, both editable; duplicates are caught; add publishes
   the fragment and copies the citation. *Done:* prototype in `mods/book-dashboard` (`quickadd.tsx`, `refs.ts`,
-  server route `lookup.ts`), live 2026-11-18. No LLM. Next: generalize into blykker; feeds the *References pane* and
+  server route `lookup.ts`), live 2026-11-18. *Model step (later the same day):* a description no keyword hit
+  matches goes to the TK generation model, server-side through the studio's `complete()`; suggestions are kept only
+  when a registry confirms them. Next: generalize into blykker; feeds the *References pane* and
   *Mine references* items, which can reuse the lookup route.
   *Open:* citing inserts by clipboard, since `draftCounter` can't write to the editor (friction log); Open Library
   search hits have no publisher (an edition's imprint would mismatch the first-publication year), so book entries
@@ -283,6 +285,15 @@ studio decides.** What an extension asks for may not be what it gets.
 - **Feedback:** the page context carries the granted zone, so an extension that was demoted can adapt.
 - Browser-only; an extension API addition, so API-surface review as #133 had. No protocol or wire change.
 - **New Nature:** the Dashboard asks for `zone: 'top'`.
+
+## Design decisions: LLM calls in the mod (2026-11-18)
+
+- **Where they run** (Venkat, for reference lookup): server-side, in the mod's owner-read route, through the studio's
+  own `complete()`: the blyg's key, model setting and daily budget, no new secret. The same answer is the default for
+  `refyr` and the editorial passes, which are the rest of the open question.
+- **Which model:** the TK generation model (`aiModelTk`), not the changelog model: identifying a work from a loose
+  description is judgment.
+- **Trust:** the model suggests and a registry confirms; it never writes an entry.
 
 ## Design decisions: hiding nav in the editor (2026-11-09)
 

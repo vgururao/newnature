@@ -17,6 +17,7 @@ export interface Source {
   doi?: string;
   isbn?: string;
   from: string;
+  model?: boolean;
 }
 
 export const REF_MARK = '[blykker-ref]: #';
@@ -42,12 +43,12 @@ const tidy = (s: Source): Source => ({
   authors: s.authors.map((n) => ({ ...n, given: n.given && nameCase(n.given), family: n.family && nameCase(n.family) })),
 });
 
-/** Drop repeat search hits: one per title and first author, keeping the fullest. */
+/** Drop repeat search hits: one per kind, title and first author, keeping the fullest. */
 export function distinct(sources: Source[]) {
   const seen = new Map<string, Source>();
   for (const raw of sources) {
     const s = tidy(raw);
-    const key = `${s.title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()}|${(s.authors[0]?.family ?? s.authors[0]?.literal ?? '').toLowerCase()}`;
+    const key = `${s.type}|${s.title.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').trim()}|${(s.authors[0]?.family ?? s.authors[0]?.literal ?? '').toLowerCase()}`;
     const had = seen.get(key);
     const score = (x: Source) => Object.values(x).filter(Boolean).length;
     if (!had || score(s) > score(had)) seen.set(key, s);
@@ -126,5 +127,16 @@ export function findExisting(s: Source, refs: { id: string; entry: string }[]) {
   return refs.find(({ entry }) => {
     const e = entry.toLowerCase();
     return (doi && e.includes(doi)) || (url && e.replace(/https?:\/\/(www\.)?/g, '').includes(url)) || (title.length > 8 && norm(entry).includes(title));
+  });
+}
+
+/** Does any hit carry most of the query's words in its title and authors? If not, the query was a description. */
+export function relevant(q: string, sources: Source[]) {
+  const words = (s: string) => s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').split(' ').filter((w) => w.length > 2);
+  const want = [...new Set(words(q))];
+  if (!want.length) return sources.length > 0;
+  return sources.some((s) => {
+    const have = new Set(words(`${s.title} ${s.authors.map((a) => `${a.given ?? ''} ${a.family ?? a.literal ?? ''}`).join(' ')}`));
+    return want.filter((w) => have.has(w)).length / want.length >= 0.7;
   });
 }

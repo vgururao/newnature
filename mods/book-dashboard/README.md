@@ -49,6 +49,14 @@ citation ("polanyi tacit dimension"). The extension's one server route, `GET /ap
 DOI; Open Library for an ISBN; Crossref and Open Library searched for a rough citation (pick one of up to six). Only
 public http(s) addresses are fetched.
 
+**Asking the model.** A rough citation that no keyword hit matches (under 70% of its words in any hit's title and
+authors) is a description, so the sheet asks the model once on its own; after any rough search, "ask the model" asks
+by hand. The route (`ask=1`) calls the studio's own `complete()` with the blyg's **TK generation model** (Settings;
+`claude-sonnet-5-5` here), so it uses the blyg's key and counts against the daily AI budget (`AI_DAILY_CALL_LIMIT`).
+The model only suggests works; each suggestion is kept only if Crossref, DataCite, Open Library or the page itself
+confirms it (most title words and the first author), and the entry is written from the registry's record. Suggestions
+nothing confirms are named in a note. If the model confirms nothing, the keyword hits stay.
+
 The sheet writes the entry in the book's style (Chicago, as the first six references were written; five of them come
 back identical from their URLs) and a label ("Polanyi 1966", "LeCun et al. 2015"), both editable. If the book already
 has the source (same DOI, address or title), it says so and offers that one's citation. **Add and publish reference**

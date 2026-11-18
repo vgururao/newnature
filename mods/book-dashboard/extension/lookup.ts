@@ -18,6 +18,7 @@ export interface Source {
   doi?: string;
   isbn?: string;
   from: 'page' | 'crossref' | 'datacite' | 'openlibrary';
+  model?: boolean;
 }
 export type Query = { kind: 'doi' | 'isbn' | 'url' | 'text'; value: string };
 
@@ -254,4 +255,67 @@ export async function lookup(fetch: Fetch, input: string): Promise<{ sources: So
   const silent = [!ol && 'Open Library', !cr && 'Crossref'].filter(Boolean).join(' and ');
   const note = silent ? `${silent} didn't answer; try again for more.` : undefined;
   return sources.length ? { sources, note } : { sources: [], note: note ?? 'Nothing found. Try a URL, DOI or ISBN, or fewer words.' };
+}
+
+// Asking the model (the blyg's TK generation model, through the studio's own call and budget): it
+// reads a loose description and suggests sources, and each suggestion is kept only if a registry or
+// the page itself confirms it. The model never writes an entry, so it can't invent a reference.
+export type Complete = (system: string, user: string) => Promise<string>;
+interface Guess { title?: string; authors?: string[]; year?: string | number; kind?: string; url?: string; doi?: string; isbn?: string }
+
+const ASK_SYSTEM = `You identify published works from loose descriptions written by an author citing sources in a nonfiction book.
+Answer with JSON only: an array of up to 4 guesses, most likely first, each
+{"title": "...", "authors": ["Given Family"], "year": 1966, "kind": "book" | "article" | "web", "doi": "...", "isbn": "...", "url": "..."}.
+Give a doi, isbn or url only if you are sure of it; otherwise leave it out. Only real works you know of; if none fits, answer [].`;
+
+const words = (s: string) => new Set(s.toLowerCase().replace(/[^\p{L}\p{N}]+/gu, ' ').split(' ').filter((w) => w.length > 2));
+/** Does a found source match the guess: most of the guess's title words, and its first author's family name if given. */
+export function confirms(found: Source, guess: Guess) {
+  const want = words(guess.title ?? '');
+  if (!want.size) return false;
+  const got = words(found.title);
+  const shared = [...want].filter((w) => got.has(w)).length;
+  if (shared / want.size < 0.7) return false;
+  const family = guess.authors?.[0]?.trim().split(/\s+/).pop()?.toLowerCase();
+  return !family || found.authors.some((a) => (a.family ?? a.literal ?? '').toLowerCase().includes(family));
+}
+
+export function parseGuesses(text: string): Guess[] {
+  const at = text.indexOf('['), end = text.lastIndexOf(']');
+  if (at < 0 || end < at) return [];
+  try {
+    const v = JSON.parse(text.slice(at, end + 1));
+    return Array.isArray(v) ? v.filter((g) => g && typeof g === 'object' && typeof g.title === 'string').slice(0, 4) : [];
+  } catch {
+    return [];
+  }
+}
+
+async function verify(fetch: Fetch, g: Guess): Promise<Source | null> {
+  const tries: (() => Promise<Source | null>)[] = [];
+  if (g.doi) tries.push(() => doi(fetch, g.doi!));
+  if (g.isbn) tries.push(async () => (await lookup(fetch, `ISBN ${g.isbn}`)).sources[0] ?? null);
+  if (g.url && fetchable(g.url)) tries.push(() => page(fetch, g.url!));
+  // A search by title and author, keeping the first hit that matches the guess.
+  tries.push(async () => {
+    const q = [g.title, g.authors?.[0]].filter(Boolean).join(' ');
+    const { sources } = await lookup(fetch, q);
+    const kind = g.kind === 'book' ? 'book' : g.kind === 'article' ? 'article' : undefined;
+    return sources.find((s) => confirms(s, g) && (!kind || s.type === kind)) ?? sources.find((s) => confirms(s, g)) ?? null;
+  });
+  for (const t of tries) {
+    const found = await t().catch(() => null);
+    if (found && confirms(found, g)) return found;
+  }
+  return null;
+}
+
+export async function ask(fetch: Fetch, complete: Complete, input: string): Promise<{ sources: Source[]; note?: string }> {
+  const guesses = parseGuesses(await complete(ASK_SYSTEM, `Which work is this? ${input.trim()}`));
+  if (!guesses.length) return { sources: [], note: 'The model had no suggestion.' };
+  const checked = await Promise.all(guesses.map((g) => verify(fetch, g)));
+  const sources = checked.filter((s): s is Source => !!s).map((s) => ({ ...s, model: true }));
+  const unconfirmed = guesses.filter((_, i) => !checked[i]).map((g) => `${g.title}${g.authors?.length ? ` (${g.authors[0]}${g.year ? ` ${g.year}` : ''})` : ''}`);
+  const note = unconfirmed.length ? `The model also suggested, but no registry confirmed: ${unconfirmed.join('; ')}. Search for it by hand.` : undefined;
+  return sources.length ? { sources, note } : { sources: [], note: note ?? 'Nothing the model suggested could be confirmed.' };
 }

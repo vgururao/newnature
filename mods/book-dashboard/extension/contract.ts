@@ -20,10 +20,12 @@ export const SourceSchema = z
     doi: z.string().optional(),
     isbn: z.string().optional(),
     from: z.enum(["page", "crossref", "datacite", "openlibrary"]),
+    model: z.boolean().optional().describe("Suggested by the model, then confirmed by `from`."),
   })
   .openapi("BookDashboardSource");
 
 export const routes = {
   // q is a URL, a DOI, an ISBN or a rough citation; a rough one is searched and gives up to 6 candidates.
-  extBookDashboardLookup: extensionRoute("book-dashboard", "lookup", "/lookup", z.object({ sources: z.array(SourceSchema), note: z.string().optional() }), z.object({ q: z.string().min(2).max(500) })),
+  // With ask=1, q is a loose description for the model (lookup.ts, `ask`).
+  extBookDashboardLookup: extensionRoute("book-dashboard", "lookup", "/lookup", z.object({ sources: z.array(SourceSchema), note: z.string().optional() }), z.object({ q: z.string().min(2).max(500), ask: z.enum(["1"]).optional().describe("Ask the TK generation model to identify the work, then confirm each suggestion in a registry. One AI call, counted in the daily budget.") })),
 };

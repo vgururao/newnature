@@ -44,3 +44,30 @@ if (live === '--live') {
     console.log(entry === hand ? 'same ' : 'DIFF ', q, '\n   got:  ', entry, entry === hand ? '' : `\n   hand: ${hand}`);
   }
 }
+
+// Asking the model, with a stand-in model: a real suggestion is confirmed, an invented one is not.
+if (live === '--live') {
+  const { ask, parseGuesses } = await import(`${dir}/lookup.ts`);
+  assert.equal(parseGuesses('Sure: [{"title": "X"}] hope that helps').length, 1);
+  assert.deepEqual(parseGuesses('no idea'), []);
+  const model = async () => JSON.stringify([
+    { title: 'The Tacit Dimension', authors: ['Michael Polanyi'], year: 1966, kind: 'book' },
+    { title: 'The Glass Orchard of Forgotten Engines', authors: ['Petronella Vandersnoot'], year: 1987, kind: 'book' },
+  ]);
+  const got = await ask(fetch, model, 'that 60s book about knowing more than we can tell');
+  console.log('ask:', got.sources.map((s: { title: string; from: string }) => `${s.title} (${s.from})`), '|', got.note);
+  assert.equal(got.sources.length, 1);
+  assert.equal(got.sources[0].model, true);
+  assert.match(got.note ?? '', /Glass Orchard/);
+  console.log('ask ok');
+}
+
+const hit = (title: string, family: string) => ({ type: 'book', title, authors: [{ family }], from: 'openlibrary' });
+assert.equal(r.relevant('polanyi tacit dimension', [hit('The Tacit Dimension', 'Polanyi')]), true);
+assert.equal(r.relevant('that 60s book about knowing more than we can tell', [hit('American Film', 'Institute'), hit('Knowing More Than We Can Tell', 'Sinclair')]), false);
+assert.equal(r.relevant('anything', []), false);
+console.log('relevant ok');
+const book = hit('The Tacit Dimension', 'Polanyi');
+const chapter = { type: 'chapter', title: 'The Tacit Dimension', authors: [{ given: 'M', family: 'POLANYI' }], container: 'Knowledge in Organisations', pages: '135–146', publisher: 'Elsevier', date: '1997', doi: '10.1016/x', from: 'crossref' };
+assert.deepEqual(r.distinct([book, chapter]).map((s: { type: string }) => s.type), ['book', 'chapter']);
+console.log('distinct ok');
