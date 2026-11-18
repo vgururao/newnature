@@ -6,6 +6,42 @@ is managed on its own, so its work is logged here too.
 
 ---
 
+## Session 5 — 2026-11-18
+
+**Model:** Opus 5.5 · **Time:** 14:27–15:21 PST · **Committed:** yes (newnature) ·
+**Deployed:** yes, six times: Worker `blyg-newnature`, finally `01999f52` (studio 0.62.0 + `mods/book-dashboard`, rollback
+`af473206`; the chain is in `blyg.md`). **Published:** nothing by Claude. Venkat added one reference through the new
+sheet (cited in Pinched vs. Strained); References still needs a Dashboard rebuild. **Repo made public** at Venkat's request.
+
+**Follow-ups from 0.62.0** (PRs #143 and #144 were merged 2026-11-13 and released in 0.59.0). The Dashboard asks for menu
+zone `top`, and `editorRegions` (`regions.ts`) holds the two nav blocks out of the full editor's text box. Tested
+against all 15 live sections, and in a logged-in screenshot. The five new chapters already had nav: the dry-run's
+`chain:` and `settings:` lines print on every run, which I misread at startup as pending changes.
+
+**Reference quick-add** (Venkat chose it over `refyr`, mining and a management tab). **+REF**, a boxed button beside the
+counts (composer and full editor), opens a sheet: a URL, DOI, ISBN or rough citation → an entry in the book's Chicago
+style plus an "Author Year" label, both editable → duplicate check against the book's references → **add and
+publish**, which creates the `[blykker-ref]` fragment and copies `[[id | label]]` to the clipboard. The mod's first server
+half: the owner read `GET /api/ext/book-dashboard/lookup` (page metadata; Crossref, then DataCite; Open Library). Five of
+the six hand-written references come back identical from their URLs. Add was tested on a disposable local studio.
+Inline insertion was ruled out: `draftCounter` can't write to the editor, and Venkat declined a DOM workaround ("good
+enough"). The toolbar row has no extension slot. A studio PR is possible but wasn't asked for.
+
+**Model step.** A rough citation that no keyword hit matches goes once to the TK generation model (Sonnet 5.5) through
+the studio's `complete()`, using the blyg's key and daily budget. "ask the model" asks by hand. Each suggestion is kept
+only if a registry or the page confirms it. Verified live: a description gave *The Tacit Dimension*, and an invented title was
+rejected in the stand-in test. Fixed on the way: a book and a chapter with the same title no longer merge.
+
+**Decisions:** LLM calls in the mod run server-side through the studio's `complete()`, with the TK model; the model
+suggests, a registry confirms (`blykker-notes.md` → *LLM calls in the mod*). Reference fragments stay in the public feed for now.
+Repo `vgururao/newnature` public (history scanned for secrets first; Cloudflare account id visible in `blyg.md`).
+
+**State after:** blyg on 0.62.0 + mods, no patches; Dashboard at top; nav hidden in the editor; +REF live with the model
+fallback. **Open:** run the Dashboard rebuild for References; Contents label mismatches (status.md); generalize nav
+regions and quick-add into blykker; the `Publishing/CLAUDE.md` line is edited but not committed (that repo has other pending edits).
+
+---
+
 ## Session 4b — 2026-11-17 (backfilled 2026-11-18)
 
 **Model:** Opus 5.5 · **Committed:** `94e3322` (blyg.md only; pushed 2026-11-18) · **Deployed:** yes: Worker
