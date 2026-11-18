@@ -6,6 +6,19 @@ is managed on its own, so its work is logged here too.
 
 ---
 
+## Session 4b — 2026-11-17 (backfilled 2026-11-18)
+
+**Model:** Opus 5.5 · **Committed:** `94e3322` (blyg.md only; pushed 2026-11-18) · **Deployed:** yes: Worker
+`blyg-newnature` `1148a4d9` (studio 0.62.0 + `mods/book-dashboard` unchanged, rollback `fca06ebd`).
+
+A short upgrade session that logged only to `blyg.md`; this entry was written from that commit in session 5.
+Studio 0.59.0–0.62.0 (menu zones, editor regions, extension vendoring, backup, Discover, Shelf, Background,
+mathematics, burst fold). Migrations `0044` (shelf) and `0046` (Background) applied. Verified then: generator
+0.62.0, section items 200, sync dry-run clean, Dashboard "Up to date". By session 5 the five new chapters were in
+Contents with nav built; this log doesn't record when that rebuild ran.
+
+---
+
 ## Session 4 — 2026-11-09
 
 **Model:** Opus 5.5 · **Time:** ~08:00–09:50 PST · **Committed:** yes (newnature; studio branches for PRs) ·

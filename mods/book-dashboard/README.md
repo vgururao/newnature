@@ -29,9 +29,17 @@ load, and an extension can't change core labels such as the one under More.
 
 ## The main menu
 
-The page asks for the main-menu entry with `page.mainMenu` (studio 0.57.0+, PR #133), so Dashboard sits above
-compose instead of under More. The temporary patch that did this before 0.57.0 was removed at the 0.58.1 upgrade
-(2026-11-09).
+The page asks for the main-menu entry with `page.mainMenu: { icon, zone: 'top' }` (zones: studio 0.59.0+, PR #143),
+so Dashboard sits at the top of the menu, above reading. The studio decides: if another page takes `top`, Dashboard
+moves down a zone. Before zones (0.57.0–0.58.x, PR #133) it sat above compose; the temporary patch from before 0.57.0
+was removed at the 0.58.1 upgrade (2026-11-09).
+
+## Chapter navigation in the editor
+
+The extension also fills `editorRegions` (studio 0.59.0+, PR #144): the two nav blocks a rebuild writes (the nav
+line and `[blykker-nav-top]: #` under the heading, `[blykker-nav-bottom]: #` and the nav line at the end) are held
+out of the full editor's text box. The draft, preview and publish keep the whole text. "chapter navigation hidden ·
+show" beside the counts shows them, read-only. `extension/ui/regions.ts` holds the ranges; it is pure.
 
 ## Books on the shelf
 
@@ -48,6 +56,7 @@ now.
 | `extension/ui/plan.ts` | The port: what a rebuild would change. Pure. |
 | `extension/ui/apply.ts` | Applies a plan, including the swap for sections with drafts. |
 | `extension/ui/shelf.ts` | Reads the shelf and each book from their markers. |
+| `extension/ui/regions.ts` | The nav blocks held out of the full editor (`editorRegions`). Pure. |
 | `extension/ui/index.tsx`, `dashboard.css` | The page. |
 | `install.sh` | Vendors this into a studio tree and generates `book.ts` from `book.json`. |
 | `test/` | Parity with `blykker.py`, and draft safety against a local studio. |
@@ -92,6 +101,9 @@ From the studio worktree, after `install.sh`:
 # Parity: snapshot the live book (read-only; holds drafts, so keep it out of the repo), then compare.
 <this folder>/test/snapshot.py /tmp/snapshot.json
 node --import tsx <this folder>/test/parity.mts /tmp/snapshot.json $PWD/extensions/book-dashboard/ui/plan.ts
+
+# Editor regions: the box shows each section without its nav (texts.json: id → { text }, read-only, holds drafts).
+node --import tsx <this folder>/test/regions.test.mts /tmp/texts.json $PWD/extensions/book-dashboard/ui
 
 # Draft safety, against a disposable local studio with OWNER_PASSWORD=test-password and high API limits.
 npx wrangler dev --port 8799 --persist-to /tmp/dash-state

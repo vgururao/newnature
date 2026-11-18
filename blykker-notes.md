@@ -169,7 +169,7 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
   (2026-11-09) without the interim patch.
 - [ ] **Dashboard at the top of the menu** (2026-11-09). Above reading, not just above compose. Needs menu
   zones in the studio (see *Menu zones* under Design decisions); then the Dashboard asks for `zone: 'top'`.
-  *PR open 2026-11-09:* https://github.com/blygger/blygger-studio/pull/143 (not merged).
+  *PR #143 merged 2026-11-13, released in 0.59.0; Dashboard asks for `top` since 2026-11-18.*
 - [ ] **Bookshelf dropdown and book metastructure** (2026-11-06). A dropdown on the dashboard to select the
   book being worked on, perhaps with a second book started to test the mechanism.
   *Today:* the node has no book object. A book is defined by `book.json` in this repo: sections by role and id,
@@ -279,8 +279,9 @@ studio decides.** What an extension asks for may not be what it gets.
 
 - **A narrow studio slot, not an editor replacement** (Venkat). The editor's tools (pickers, format shortcuts,
   paste/upload, toolbar selection actions, focus view) are built on the native textarea, so a CodeMirror swap
-  is a large refactor; it stays a later, separate question. *PR open 2026-11-09:*
-  https://github.com/blygger/blygger-studio/pull/144 (not merged). This revises *Rich editor* above: the "small slot
+  is a large refactor; it stays a later, separate question. *PR #144 merged
+  2026-11-13, released in 0.59.0.* Prototyped here 2026-11-18 in `mods/book-dashboard` (`regions.ts`); next, generalize
+  into blykker. This revises *Rich editor* above: the "small slot
   letting an extension replace the text area" isn't small.
 - **`editorRegions`:** an extension returns ranges of the full text to hold out of the editor's textarea. The
   textarea shows the rest; each edit is rejoined into the full text before autosave, so preview, publish,

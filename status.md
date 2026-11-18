@@ -9,19 +9,17 @@
 ## Outputs
 | Format | Status | Notes |
 |--------|--------|-------|
-| Site   | in-progress | Blyg live at newnature.venkateshrao.com — studio 0.58.1 + `mods/book-dashboard` (stock studio, no patches) |
+| Site   | in-progress | Blyg live at newnature.venkateshrao.com — studio 0.62.0 + `mods/book-dashboard` (stock studio, no patches) |
 | Ebook  | not-started | |
 | Print  | not-started | |
 
 ## Active / Open
+- **Studio 0.62.0 live** (2026-11-17; redeployed 2026-11-18 as Worker `6aa42a52`, rollback `1148a4d9`). PRs #143 and #144 are in it: the Dashboard asks for menu zone `top` and hides the chapter nav in the full editor (`editorRegions`, `mods/book-dashboard/extension/ui/regions.ts`). Next: generalize the regions into blykker.
+- **Contents mismatches to check (Venkat):** the Ontological Turn chapter is listed as “Chapter: The Ontological Turn Profligacy principle” (its heading says The Ontological Turn); Pinched is listed as “Pinched vs. Warped” but its heading is `#Chapter: Pinched vs. Strained` (no space, so it isn't a heading); The Sacred, the Profane, and the Monstrous has no `#` heading; two labels carry curly quotes.
 - Book dashboard prototype live 2026-11-06 at `/studio/ext/book-dashboard` (`mods/book-dashboard/`). First live rebuild worked. **A deploy that doesn't vendor the mod removes the page**, including `npm run deploy:all` from the studio checkout; see the mod's README.
 - **Waiting on Venkat, The Strange Forest:** approve the cover (`images/cover/the-strange-forest-cover-web-1600x1567.jpg`); publish it (15 permanent feed events, new front page, placeholder pages); retire `blykker.py sync` on this blyg (sync would reset the front page and menus after the change); masthead link name (Bookshelf proposed).
 - **Waiting on Venkat, design:** core support for `[[index:]]` and `refyr` as a narrow exception to "everything in the mod"; where LLM calls for passes and `refyr` run, given browser-only extensions (`blykker-notes.md` → *Design decisions*).
-- **Studio PRs merged:** #125 word count, #126 focus view, #131 comments to self, #133 main-menu entry, all in 0.57.0; 0.58.1 adds the follow-ups (comment opener rule and typing speed, focus tint, quick-edit word count).
-- **Studio PR open: #144 editor regions** (2026-11-09; the studio session merges it): an `editorRegions` slot that keeps generated text (the chapter nav) out of the full editor's text box, read-only when shown, hidden each time. When released: a blykker `editorRegions` for the two nav blocks. See `blykker-notes.md` → *Design decisions: hiding nav in the editor*.
-- **Check:** five threads from 2026-11-07 aren't in the Contents chain; if they are new chapters, add them to Contents before a rebuild.
-- **Studio PR open: #143 menu zones** (top / visible / hidden; extension asks, studio decides). The studio session merges it. When released, add `zone: 'top'` to the Dashboard's `mainMenu` (`mods/book-dashboard/extension/ui/index.tsx`) and redeploy.
-- **Studio 0.58.1 live** (2026-11-09): Worker `fca06ebd`, rollback `648710d2`; migration `0045` applied. `/* ... */` comments to self now stay out of everything public, and the menu patch is gone. If `deploy:all` still lists this node, it should come out of the studio's `deploy-targets.json`.
+- **Studio PRs merged:** #125 word count, #126 focus view, #131 comments to self, #133 main-menu entry, all in 0.57.0; #143 menu zones and #144 editor regions in 0.59.0; 0.58.1 adds the follow-ups (comment opener rule and typing speed, focus tint, quick-edit word count).
 - Sync hazard fixed 2026-11-06: sync no longer publishes a section with unpublished edits. Those sections keep stale published nav until they are published.
 - Word-count extension: live here since studio 0.54.0 (2026-11-05, PR #117). Compiled in through the studio's gitignored `extensions.local.json` and enabled in Settings.
 - Planned in `blykker/PLAN.md`: editions; several books on one blyg (shelf + book projects, hoppers). Decisions recorded there.
