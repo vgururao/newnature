@@ -6,7 +6,7 @@
 A book on the **New Nature** thesis, written by Venkat with Claude's assistance and published
 in progress as a blyg at **https://newnature.venkateshrao.com/**. Created 2026-11-02.
 
-Repo: `vgururao/newnature` (private, branch `main`).
+Repo: `vgururao/newnature` (public since 2026-11-18, branch `main`). **Everything committed here is public**: the history was scanned for secrets before the switch.
 
 ## Layout
 
