@@ -326,3 +326,5 @@ studio decides.** What an extension asks for may not be what it gets.
 - 2026-11-02 — Published reference and note fragments show up in the public feed as items.
 
 ## Taken up by blykker
+
+- 2026-11-20 — **Editor regions: a failed join hides the toggle for the rest of the visit.** Studio's fail-safe (`useHeldOut`) shows the whole text and drops the notice, so the author can't re-hide the nav until the editor is reopened. Found through a mod bug (regions claimed typed newlines; fixed in `regions.ts`, keystroke test in `test/regions.test.mts`). Possible studio suggestion, not specified: keep a "hide" that re-tries. Rule for any `editorRegions` author: a region must not claim whitespace the author can type; test every caret.

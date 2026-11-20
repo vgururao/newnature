@@ -8,6 +8,24 @@ import { readFileSync } from 'node:fs';
 const [file, ui] = process.argv.slice(2);
 const { navRegions } = await import(`${ui}/regions.ts`);
 const { stripNav } = await import(`${ui}/plan.ts`);
+// The studio's own region helpers, from the worktree the mod is vendored into.
+const core = await import(`${ui}/../../../src/ui/editor-regions.ts`);
+
+/**
+ * What the full editor does on each edit (`useHeldOut` in authoring.tsx): insert `typed` at
+ * every caret in the box, join the regions back, find them again, and check the box comes back
+ * as typed. A mismatch is the editor's fail-safe: it shows the whole text and drops the toggle.
+ */
+const typing = (id: string, text: string) => {
+  const { shown, held } = core.split(text, navRegions(text));
+  for (const typed of ['\n', 'x', '\n\n']) {
+    for (let caret = 0; caret <= shown.length; caret++) {
+      const next = shown.slice(0, caret) + typed + shown.slice(caret);
+      const joined = core.join(next, core.rebase(held, shown, next, caret + typed.length));
+      assert.equal(core.split(joined, navRegions(joined)).shown, next, `${id}: ${JSON.stringify(typed)} typed at ${caret} of ${shown.length}`);
+    }
+  }
+};
 
 const box = (text: string) => {
   let out = '';
@@ -29,6 +47,7 @@ for (const [id, { text }] of Object.entries(texts)) {
   assert.equal(squash(shown), stripNav(text), `${id}: the box isn't the text without nav`);
   assert.ok(!/^\n/.test(shown), `${id}: the box starts with a blank line`);
   if (navRegions(text).length) held++;
+  typing(id, text);
 }
 
 // Synthetic: heading, no heading, top only, nothing.
@@ -38,5 +57,8 @@ assert.equal(box(withHeading), '# Title\n\nBody.');
 const bare = `${line}\n\n[blykker-nav-top]: #\n\nBody.\n\n[blykker-nav-bottom]: #\n\n${line}`;
 assert.equal(box(bare), 'Body.');
 assert.deepEqual(navRegions('# Plain\n\nNo nav here.'), []);
+// Extra blank lines a writer left beside the nav are theirs, shown in the box.
+assert.equal(box(`# Title\n\n\n${line}\n\n[blykker-nav-top]: #\n\nBody.\n\n\n\n[blykker-nav-bottom]: #\n\n${line}`), '# Title\n\n\nBody.\n\n');
+for (const [name, text] of Object.entries({ withHeading, bare })) typing(name, text);
 
 console.log(`regions ok: ${Object.keys(texts).length} sections, ${held} with nav`);
