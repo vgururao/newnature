@@ -64,6 +64,31 @@ creates the `[blykker-ref]: #` fragment, publishes it (a draft reference would b
 a feed item), and copies `[[id | label]]` to the clipboard to paste. The slot can't insert at the cursor. References
 lists it after the next rebuild. The sheet also lists the book's references, filterable, each with **cite**.
 
+## Writing sessions
+
+**Start writing session** (under the rebuild button) keeps a snapshot of the book in a private draft marked
+`[blykker-session-open]: #`: each Contents section's working text, version and revision, and every reference
+fragment's version and revision. It survives reloads and other devices; the Dashboard shows the session and its
+length until it ends. **discard** deletes the draft and logs nothing.
+
+**End session** compares the book with the snapshot and shows the log entry, with a box for a note, rendered by the
+studio's preview. **Publish log entry** publishes it as a thread, with the change note "Writing log entry: a record of
+a writing session on this book, not book text." (so readers' tools can background it), adds it to the public
+**Writing log** hopper (`/h/writing-log/`, made on first use), and deletes the session draft. **Keep writing** goes
+back to the open session.
+
+- **Counted:** author words (the Dashboard's word counts use the same rule): no nav, markers or link syntax, and
+  no TK instruction text. Contents, References and the Index are left out (a rebuild writes them).
+- **Added and cut** come from a word-level diff of each section's start and end text, so a rewrite counts both ways.
+  Past 4 million cells a section is compared as word bags and the entry says "roughly".
+- **AI or hand-written:** words inside a TK output (`[TK]…[=]output[/TK]`) or an `impyrt` scope are AI; the rest are
+  hand-written. Text pasted in without `impyrt` counts as hand-written. Only working copies carry the markup
+  (publishing strips it), so sessions read working copies.
+- **References:** added = reference fragments that didn't exist at the start; edited = a new version or revision.
+- **Published this session:** each section's versions since the start, with their change notes (rebuild notes left out).
+- **Data line:** the entry ends with an invisible `[blykker-session]: # (v=1 start=… added=… ch=<id>:<added>:<cut>:<ai> …)`
+  for goals and progress graphs later; `parseDataLine` in `session.ts` reads it back.
+
 ## Books on the shelf
 
 If the front page carries `[blykker-shelf]: #`, the page reads the books from it live, shows a Bookshelf dropdown
@@ -132,6 +157,9 @@ node --import tsx <this folder>/test/regions.test.mts /tmp/texts.json $PWD/exten
 
 # References: formatting and matching; --live also looks up the six hand-written references and compares.
 node --import tsx <this folder>/test/refs.test.mts $PWD/extensions/book-dashboard --live
+
+# Writing sessions: tokens (hand/AI), the word diff, the summary, the entry and its data line.
+node --import tsx <this folder>/test/session.test.mts $PWD/extensions/book-dashboard/ui
 
 # Draft safety, against a disposable local studio with OWNER_PASSWORD=test-password and high API limits.
 npx wrangler dev --port 8799 --persist-to /tmp/dash-state

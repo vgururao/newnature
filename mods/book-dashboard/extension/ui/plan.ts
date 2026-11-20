@@ -468,18 +468,6 @@ function planMenu(book: Book, first: string, settings?: { authorLinks?: unknown;
     : { authorLinks, linksExternal, linksThreads: [] };
 }
 
-/** Words the author wrote: no nav, markers, generated blocks or link syntax. */
-export function authorWords(text: string) {
-  const body = before(before(stripNav(text), GENERATED), NOTES_AT)
-    .replace(/^\[[^\]\n]+\]:[ \t]*\S+[ \t]*$/gm, ' ')
-    .replace(/!\[\[[^\]\n]*\]\]/g, ' ')
-    .replace(new RegExp(`\\[\\[${ID}[ \\t]*\\|([^\\n]*?)\\]\\]`, 'g'), '$1')
-    .replace(new RegExp(`\\[\\[${ID}\\]\\]`, 'g'), ' ')
-    .replace(/!\[[^\]\n]*\]\([^)\n]*\)/g, ' ')
-    .replace(/\[([^\]\n]*)\]\([^)\n]*\)/g, '$1');
-  return body.split(/\s+/).filter((w) => /[\p{L}\p{N}]/u.test(w)).length;
-}
-
 /** The lines that differ between two texts, for the preview. */
 export function changedLines(oldText: string, newText: string): { sign: '+' | '-'; line: string }[] {
   const a = oldText.split('\n');

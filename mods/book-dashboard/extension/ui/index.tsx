@@ -8,9 +8,14 @@ import { BlyggerApi, Button, confirm, toast, unwrap } from '../../../src/ui/exte
 import type { StudioContext, StudioExtension } from '../../../src/ui/extension-api.ts';
 import { applyPlan, restore, type Ops, type Outcome, type Recovery, type RecoveryStore } from './apply.ts';
 import { BOOK } from './book.ts';
-import { actionLabel, authorWords, buildPlan, changedLines, chainOf, describeChange, liveText, loadItems, outstanding, statusLine, type Book, type ItemLike, type Plan } from './plan.ts';
+import { actionLabel, buildPlan, changedLines, chainOf, describeChange, liveText, loadItems, outstanding, statusLine, type Book, type ItemLike, type Plan } from './plan.ts';
 import { QuickAdd } from './quickadd.tsx';
 import { navRegions } from './regions.ts';
+import { tokens } from './session.ts';
+import { WritingSession } from './session.tsx';
+
+/** Words the author wrote, as writing sessions count them (session.ts). */
+const authorWords = (text: string) => tokens(text).length;
 import { crossings, isShelf, parseBook, parseShelf, type ShelfBook } from './shelf.ts';
 import './dashboard.css';
 
@@ -445,6 +450,7 @@ function Dashboard({ context }: { context: StudioContext }) {
           <Button className="btn btn-primary" data-rebuild-button disabled={busy} onClick={rebuild}>{busy ? 'Working…' : label}</Button>
         </div>
       ) : null}
+      {plan && loaded ? <WritingSession context={context} chain={plan.chain} book={loaded.book} /> : null}
       {plan?.sections.some((s) => s.action === 'splice') ? (
         <p className="book-dashboard-warning">Close other tabs editing these sections first. Their drafts are swapped out for a moment, and an open editor will report a conflict.</p>
       ) : null}
@@ -459,7 +465,7 @@ function Dashboard({ context }: { context: StudioContext }) {
 export const extension: StudioExtension = {
   name: NAME,
   label: 'Dashboard',
-  description: 'New Nature’s private project page: sections, word counts, and the rebuild. Also hides the chapter navigation in the full editor, and adds “+REF” beside the counts.',
+  description: 'New Nature’s private project page: sections, word counts, the rebuild, and writing sessions logged to the blyg. Also hides the chapter navigation in the full editor, and adds “+REF” beside the counts.',
   entryByline: ({ context }) =>
     context.id === TOC && !context.imported ? (
       <a

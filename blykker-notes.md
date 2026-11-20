@@ -213,6 +213,14 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
     bars don't cover it.
   *Order:* after #154 is merged and released: bar with ← Dashboard, prev/next, nav toggle and REF (cite and
   add-and-insert); then the Contents pane; then the picker-tab PR; then whole-book preview.
+- [x] **Writing sessions** (2026-11-20, Venkat). "Start writing session" / "End session" on the Dashboard; the end makes a
+  devlog-style entry: words added and cut by chapter (word diff against a start snapshot), split rough AI/hand from the
+  studio's TK and `impyrt` markup, references added and edited, versions published with their change notes, and an
+  optional note. Previewed, then published to the blyg and the public **Writing log** hopper, outside the book's reading
+  flow; the change note marks it a log entry (Venkat: fine in the main feed). An invisible data line holds the numbers.
+  *Done:* prototype in `mods/book-dashboard` (`session.ts`, `session.tsx`), live 2026-11-20; publish path tested on a
+  local studio, start/end/preview/discard on the live blyg with publishing blocked. *Next:* goals and rate-of-progress
+  graphs from the data lines; a session button in the Book bar once editor bars ship; generalize into blykker.
 - [ ] **Mine references while writing** (2026-11-06). blykker only. References inserted while writing
   are automatically mined and created as reference fragments. In a later pass, the inline references
   are updated to point to the fragment instead of going directly to the reference.
