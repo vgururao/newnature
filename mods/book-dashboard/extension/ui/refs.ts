@@ -24,7 +24,6 @@ export const REF_MARK = '[blykker-ref]: #';
 const MONTHS = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
 const SMALL = new Set(['a', 'an', 'the', 'and', 'but', 'or', 'nor', 'for', 'so', 'yet', 'as', 'at', 'by', 'in', 'of', 'on', 'to', 'up', 'via', 'vs.', 'von', 'van', 'de', 'der']);
 
-const cap = (w: string) => w.charAt(0).toUpperCase() + w.slice(1);
 /** Headline case for a title that came in lower case (Open Library's habit); others are kept as given. */
 export function headline(title: string) {
   const words = title.split(' ');
