@@ -193,6 +193,26 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
   *Open:* citing inserts by clipboard, since `draftCounter` can't write to the editor (friction log); Open Library
   search hits have no publisher (an edition's imprint would mismatch the first-publication year), so book entries
   from a search need the imprint typed; reference fragments still land in the public feed (left for now, Venkat).
+- [ ] **Book editing view** (2026-11-20). The stock full editor plus a "Book" editor bar, not a separate editor,
+  so every studio control stays (Venkat: "a strict superset of the existing studio controls"). Reached from the
+  Dashboard and switchable to from the default editor; no main-menu entry. *Built on* studio PR #154 (editor bars:
+  rows above and below the text box, room allocated by the studio, a bars menu to hide/show each mod's bar, bars
+  can insert at the cursor). Parts:
+  - **← Dashboard** in place of going back to compose, and **previous / next chapter**.
+  - **Contents pane**: a sheet listing the chapters in Contents order (drafts marked), for switching chapter.
+  - **Chapter nav toggle** in the bar (`ownsRegionToggle`), replacing the studio's notice.
+  - **References pane**, opened when adding a reference, for a new one or an existing one: the book's references,
+    filterable, each with **cite** that inserts `[[id | label]]` at the cursor (today: clipboard), and the +REF
+    lookup for a new one. *Wanted (Venkat):* as a **tab on the `[[` link/transclude picker**. That picker is the
+    studio's own (`BracketPicker`) and has no extension slot, so the tab needs another studio PR (a picker-tab
+    slot); until then the bar's REF button opens the same pane as a sheet.
+  - **Add and insert**: adding a new reference offers *add to the list* and *add and insert at the cursor*
+    (publishes the fragment, then inserts the citation where the cursor was when the pane opened).
+  - **Whole-book preview**: scroll or page through the book while editing one chapter.
+  - *Later, undecided:* **continuous editing**, chapters loading as you scroll and each saving its own draft;
+    bars don't cover it.
+  *Order:* after #154 is merged and released: bar with ← Dashboard, prev/next, nav toggle and REF (cite and
+  add-and-insert); then the Contents pane; then the picker-tab PR; then whole-book preview.
 - [ ] **Mine references while writing** (2026-11-06). blykker only. References inserted while writing
   are automatically mined and created as reference fragments. In a later pass, the inline references
   are updated to point to the fragment instead of going directly to the reference.
