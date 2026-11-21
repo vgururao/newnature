@@ -213,6 +213,9 @@ A generalized item moves to **Taken up by blykker** with a pointer to where it l
     bars don't cover it.
   *Order:* after #154 is merged and released: bar with ← Dashboard, prev/next, nav toggle and REF (cite and
   add-and-insert); then the Contents pane; then the picker-tab PR; then whole-book preview.
+  *Editorial assistant (2026-11-20):* manuscript-wide editing passes with a book-level brief, suggestions reviewed
+  as editor marks, are designed as a core "editorial desk" plus a book editor here: blygger-studio#163 (agents
+  that edit or author), with spec blygger/blygger-spec#36 for version-level edit provenance.
 - [x] **Writing sessions** (2026-11-20, Venkat). "Start writing session" / "End session" on the Dashboard; the end makes a
   devlog-style entry: words added and cut by chapter (word diff against a start snapshot), split rough AI/hand from the
   studio's TK and `impyrt` markup, references added and edited, versions published with their change notes, and an
