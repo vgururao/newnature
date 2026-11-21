@@ -6,6 +6,51 @@ is managed on its own, so its work is logged here too.
 
 ---
 
+## Session 6 — 2026-11-20
+
+**Model:** Opus 5.5 · **Time:** 14:15–21:19 PST · **Committed:** yes (newnature; studio feature branches) ·
+**Deployed:** yes, four times: Worker `blyg-newnature`, finally `e62954ff` (studio 0.65.0 + `mods/book-dashboard`,
+rollback `96b3fed3`; the chain is in `blyg.md`). **Published by Claude:** References (the rebuild for Venkat's 11-18
+reference), via `blykker.py sync`. Nothing else; no writing-log entry yet.
+
+**Upgrade to studio 0.65.0** (0.63 tangling and placeholders, 0.64 Base UI and a Hono security fix, 0.65 conditional
+reads). Migrations 0047–0048. Verified live; the mod's one unused constant removed so the typecheck passes.
+
+**Nav-region bug** (Venkat: full screen showed the nav and lost the toggle). Cause: the mod's regions claimed all
+whitespace before the nav, so a typed Enter at a chapter's end (where focus view puts the caret) was swallowed, and the
+editor's fail-safe showed everything and dropped its toggle. Fix: a region takes only the rebuild's `\n\n` and starts at
+the nav links. `regions.test.mts` now types at every caret through the studio's own split/join/rebase.
+
+**Writing sessions** (Venkat's request): Start/End on the Dashboard; a word diff against a snapshot kept in a private
+draft; AI/hand split from TK and `impyrt` markup; references added/edited; versions published; a note; preview, then a
+published entry in the public **Writing log** hopper with a change note marking it a log entry, and an invisible data
+line for goals and graphs later. The Dashboard's word counts now share the counter (TK instructions aren't words).
+Publish path tested on a local studio; start/end/discard on the live blyg with publishing blocked.
+
+**Studio PRs (all ready, none merged; the studio session reviews #154):**
+- **#154 editor bars** — rows above and below the text box, room allocated by the studio, a bars menu, bars that edit.
+  The studio session reworked it the same day into *replaceable controls* (`replaces: ['regionToggle']`).
+- **#155 spellcheck** (shipped extension, stacked) — US English list (ESDB size 60) checked in the browser, suggestions,
+  the blyg's dictionary, an AI proofread; now replaces the browser's spellcheck with live underlines.
+- **#156 dictionary** (core) — `GET /dictionary`, `PUT /dictionary/{source}`; `owner` plus installed sets; Settings card;
+  migration 0049. Venkat: core, not per-device, so domain extensions can add sets.
+- **#159 editor marks** (core, stacked on #154) — `context.mark()` draws underlines in a layer laid over the text box;
+  `spellcheck` becomes a replaceable control. Also fixes a flaky #154 test (a caret-restore race under load).
+
+**Issues filed:** blygger-spec#36 (editing passes as version-level provenance: the AI proofread's fixes can't be
+disclosed sensibly span by span; Venkat found the size-threshold workaround clunky). blygger-studio#163 (an editorial
+desk: suggestions, assistants and passes over many items, for agents that edit or author; the book editor is its
+first client).
+
+**Decisions:** book editing is the stock editor plus a Book bar, not a separate editor (a strict superset of studio
+controls). The dictionary is core. Model-made fixes wait on spec#36. Reference add-and-insert waits on #154's release.
+
+**State after:** blyg on 0.65.0 + mods, no patches; writing sessions live, unused so far. **Open:** References and Strange
+Rules need a rebuild (Venkat's studio edits tonight); the Preface and Tangle Logic drafts; merge order #154 → #156, #159 →
+#155; studio 0.67 removes `/changes` (blykker and the mod don't use it).
+
+---
+
 ## Session 5 — 2026-11-18
 
 **Model:** Opus 5.5 · **Time:** 14:27–15:21 PST · **Committed:** yes (newnature) ·

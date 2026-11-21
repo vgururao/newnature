@@ -15,6 +15,10 @@
 
 ## Active / Open
 - **Studio 0.65.0 live** (2026-11-20, Worker `3db2fc13`, rollback `01999f52`), with `mods/book-dashboard`. Migrations 0047–0048 applied. Next: generalize the nav regions and +REF into blykker.
+- **Writing sessions live** (2026-11-20, Worker `e62954ff`): Start/End on the Dashboard → a log entry in the public Writing log hopper (made on first publish). Not used yet. See `mods/book-dashboard/README.md` → *Writing sessions*.
+- **Rebuild pending:** References and Strange Rules (studio edits on 2026-11-20 evening; dry-run "update + publish").
+- **Studio PRs open (2026-11-20):** #154 editor bars (in the studio session's review), #156 dictionary, #159 editor marks, #155 spellcheck. Merge order #154 → #156, #159 → #155. Then: a Book bar (← Dashboard, prev/next, nav toggle, REF with add-and-insert) and the spellcheck on this blyg.
+- **Waiting on the spec:** blygger-spec#36 (editing passes as version provenance); the AI proofread's fix buttons hold until it settles. Editorial desk design: studio#163.
 - **Contents mismatches to check (Venkat):** the Ontological Turn chapter is listed as “Chapter: The Ontological Turn Profligacy principle” (its heading says The Ontological Turn); Pinched is listed as “Pinched vs. Warped” but its heading is `#Chapter: Pinched vs. Strained` (no space, so it isn't a heading); The Sacred, the Profane, and the Monstrous has no `#` heading; two labels carry curly quotes.
 - **Repo public** (2026-11-18, Venkat, to share it): `vgururao/newnature`. History scanned first: no secrets; it does show the Cloudflare account id and name in `blyg.md` (an identifier, not a credential).
 - **Reference quick-add live** (2026-11-18, Worker `01999f52`, rollback `af473206`): a boxed **+REF** beside the counts; descriptions go to the TK model, confirmed in a registry in the composer and full editor (`mods/book-dashboard`, README → *Adding a reference*). Not yet used on the live blyg. Next: generalize into blykker.
